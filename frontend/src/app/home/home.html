@@ -1,0 +1,162 @@
+<!-- Shell -->
+<div class="space-y-4">
+  <!-- Main - SIN CAMBIOS -->
+  <section class="flex-1 min-w-0">
+    <!-- Content -->
+    <div class="p-6 space-y-6">
+      <!-- Loading overlay -->
+      <div *ngIf="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 animate-pulse">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 h-24"></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 h-24"></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 h-24"></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 h-24"></div>
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 h-24"></div>
+      </div>
+
+      <!-- Metric cards -->
+      <div [class.opacity-50]="loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4">
+
+        <!-- Tasa USD -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 grid place-content-center">
+              <svg class="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M8 7h8"/>
+                <path d="M12 3l4 4-4 4"/>
+                <path d="M16 17H8"/>
+                <path d="M12 21l-4-4 4-4"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500">Tasa vigente</div>
+              <div class="text-2xl font-bold text-slate-800">1 USD = {{ fxUsd || '—' }} Bs</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 grid place-content-center">
+              <svg class="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 7h10"/>
+                <path d="M7 12h10"/>
+                <path d="M7 17h10"/>
+                <path d="M4 4h16v16H4z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500">Categorías</div>
+              <div class="text-2xl font-bold text-slate-800">{{ categoriesCount }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 grid place-content-center">
+              <svg class="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 7l-8-4-8 4"/>
+                <path d="M4 7v10l8 4 8-4V7"/>
+                <path d="M12 3v18"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500">Productos</div>
+              <div class="text-2xl font-bold text-slate-800">{{ productsTotal | number:'1.0-0' }}</div>
+              <div class="text-xs text-slate-500">Activos {{ productsActive | number:'1.0-0' }} • Inactivos {{ productsInactive | number:'1.0-0' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-violet-100 text-violet-600 grid place-content-center">
+              <svg class="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 21V7l9-4 9 4v14"/>
+                <path d="M7 21v-8h10v8"/>
+                <path d="M10 9h4"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500">Almacenes</div>
+              <div class="text-2xl font-bold text-slate-800">{{ storesCount }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 grid place-content-center">
+              <svg class="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M7 14h10"/>
+                <path d="M7 10h10"/>
+                <path d="M6 18h12"/>
+                <path d="M5 6h14v10H5z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500">Stock global</div>
+              <div class="text-2xl font-bold text-slate-800">{{ stockGlobal | number:'1.0-0' }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 grid place-content-center">
+              <svg class="w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 19V5"/>
+                <path d="M4 19h16"/>
+                <path d="M6 15l4-4 3 3 5-6"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs text-slate-500">Ventas (30 días)</div>
+              <div class="text-2xl font-bold text-slate-800">{{ salesCount30d }}</div>
+              <!-- Principal en USD + equivalente en Bs -->
+              <div class="text-xs text-slate-500">
+                Total {{ salesTotal30d | number:'1.2-2' }} USD
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div class="font-semibold text-slate-800">Stock por sede</div>
+            <div class="text-xs text-slate-500">Inventario actual</div>
+          </div>
+
+          <div *ngIf="!sedeValues?.length; else chartBarOk" class="text-sm text-slate-500 py-16 text-center">
+            Sin datos de stock por sede.
+          </div>
+          <ng-template #chartBarOk>
+            <div class="relative">
+              <canvas #barCanvas class="w-full"></canvas>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <div class="font-semibold text-slate-800">Productos activos vs inactivos</div>
+          </div>
+
+          <div *ngIf="(productsActive || 0) + (productsInactive || 0) === 0; else chartPieOk"
+               class="text-sm text-slate-500 py-16 text-center">
+            Sin datos de productos.
+          </div>
+          <ng-template #chartPieOk>
+            <div class="relative">
+              <canvas #pieCanvas class="w-full"></canvas>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

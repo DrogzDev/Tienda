@@ -1,0 +1,154 @@
+<div class="flex min-h-screen bg-slate-50">
+
+  <!-- Sidebar (desktop) - REDISEÑADA -->
+  <aside
+    class="hidden md:flex shrink-0 bg-gradient-to-b from-slate-800 to-slate-900 text-slate-200 transition-all duration-300 overflow-hidden shadow-xl"
+    [class.w-64]="!sidebarCollapsed()"
+    [class.w-20]="sidebarCollapsed()"
+  >
+    <div class="flex-1 flex flex-col relative">
+      <!-- Header -->
+      <div class="h-16 flex items-center px-4 border-b border-slate-700/50 bg-slate-800/40">
+        <button type="button"
+                (click)="toggleCollapse()"
+                class="flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-slate-700/50 transition-all duration-300 group"
+                [attr.title]="sidebarCollapsed() ? 'Expandir menú' : 'Contraer menú'"
+                [attr.aria-label]="sidebarCollapsed() ? 'Expandir menú' : 'Contraer menú'">
+          <span class="inline-block w-5 shrink-0 grid place-content-center">
+            <svg class="w-4 h-4 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"/>
+            </svg>
+          </span>
+          <span class="font-bold tracking-wide truncate text-white" *ngIf="!sidebarCollapsed()">POS System</span>
+        </button>
+      </div>
+
+      <!-- Nav -->
+      <nav class="px-3 py-6 space-y-2 text-[15px]">
+        <a routerLink="/home"
+           routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-700/50 transition-all duration-300 group relative"
+           title="Home">
+          <span class="inline-block w-5 shrink-0 text-slate-300 group-hover:text-white group-hover:scale-110 transition-all">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          </span>
+          <span class="truncate font-medium" *ngIf="!sidebarCollapsed()">Home</span>
+          <span class="absolute -right-1 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" *ngIf="sidebarCollapsed()"></span>
+        </a>
+
+        <a routerLink="/products"
+           routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-700/50 transition-all duration-300 group relative"
+           title="Productos">
+          <span class="inline-block w-5 shrink-0 text-slate-300 group-hover:text-white group-hover:scale-110 transition-all">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5z"/></svg>
+          </span>
+          <span class="truncate font-medium" *ngIf="!sidebarCollapsed()">Productos</span>
+          <span class="absolute -right-1 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" *ngIf="sidebarCollapsed()"></span>
+        </a>
+
+        <a routerLink="/products/new"
+           routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-700/50 transition-all duration-300 group relative"
+           title="Crear Producto">
+          <span class="inline-block w-5 shrink-0 text-slate-300 group-hover:text-white group-hover:scale-110 transition-all">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          </span>
+          <span class="truncate font-medium" *ngIf="!sidebarCollapsed()">Crear Producto</span>
+          <span class="absolute -right-1 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" *ngIf="sidebarCollapsed()"></span>
+        </a>
+
+        <a routerLink="/sales"
+           routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-700/50 transition-all duration-300 group relative"
+           title="Ventas">
+          <span class="inline-block w-5 shrink-0 text-slate-300 group-hover:text-white group-hover:scale-110 transition-all">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+          </span>
+          <span class="truncate font-medium" *ngIf="!sidebarCollapsed()">Ventas</span>
+          <span class="absolute -right-1 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity" *ngIf="sidebarCollapsed()"></span>
+        </a>
+      </nav>
+
+      <!-- Footer -->
+      <div class="mt-auto p-4 border-t border-slate-700/50 text-xs text-slate-400">
+        <div class="text-center" *ngIf="!sidebarCollapsed()">POS System v2.0</div>
+        <div class="text-center" *ngIf="sidebarCollapsed()">v2.0</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Sidebar (mobile overlay) - REDISEÑADA -->
+  <div
+    class="md:hidden fixed inset-0 z-40"
+    [class.pointer-events-none]="!sidebarOpen()"
+    [class.hidden]="!sidebarOpen()"
+  >
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="toggleSidebar()"></div>
+
+    <!-- Drawer -->
+    <aside
+      class="absolute inset-y-0 left-0 w-72 bg-gradient-to-b from-slate-800 to-slate-900 text-slate-200 shadow-2xl transform transition-transform duration-300"
+      [class.-translate-x-full]="!sidebarOpen()"
+    >
+      <div class="h-16 flex items-center px-5 border-b border-slate-700/50 justify-between bg-slate-800/40">
+        <div class="font-bold tracking-wide text-white">POS System</div>
+        <button class="w-9 h-9 grid place-content-center rounded-xl hover:bg-slate-700/50 transition-all"
+                (click)="toggleSidebar()"
+                title="Cerrar menú" aria-label="Cerrar menú">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M6 6l12 12M18 6L6 18"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="px-3 py-6 space-y-2 text-[15px]" (click)="toggleSidebar()">
+        <a routerLink="/home"
+           routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-700/50 transition-all">
+          <span class="inline-block w-5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg></span> Home
+        </a>
+
+        <a routerLink="/products"
+           routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-700/50 transition-all">
+          <span class="inline-block w-5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v14H3z"/></svg></span> Productos
+        </a>
+
+        <a routerLink="/products/new"
+           routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-700/50 transition-all">
+          <span class="inline-block w-5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg></span> Crear Producto
+        </a>
+
+        <a routerLink="/sales"
+           routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+           [routerLinkActiveOptions]="{ exact: true }"
+           class="flex items-center gap-3 rounded-xl px-3 py-3 hover:bg-slate-700/50 transition-all">
+          <span class="inline-block w-5"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg></span> Ventas
+        </a>
+      </nav>
+
+      <!-- Footer móvil -->
+      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50 text-xs text-slate-400 text-center">
+        POS System v2.0
+      </div>
+    </aside>
+  </div>
+
+  <!-- Main -->
+  <section class="flex-1 min-w-0">
+    <!-- Content -->
+    <main class="p-6">
+      <router-outlet></router-outlet>
+    </main>
+  </section>
+</div>

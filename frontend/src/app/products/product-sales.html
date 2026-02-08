@@ -1,0 +1,482 @@
+<!-- Productos (antes sales) -->
+<div class="space-y-4">
+
+  <!-- filtros -->
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-soft p-4">
+    <div class="grid gap-3 md:grid-cols-2">
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Filtrar por Sede</label>
+        <select
+          class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          [formControl]="storeCtrl"
+        >
+          <option [ngValue]="null">Selecciona…</option>
+          <option *ngFor="let s of stores" [ngValue]="s.id">{{ s.name }} ({{ s.code }})</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Buscar producto</label>
+        <input
+          type="text"
+          class="w-full rounded-lg border border-slate-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          [formControl]="search"
+          placeholder="Nombre o SKU…"
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout principal: lista + carrito -->
+  <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+
+    <!-- Productos -->
+    <div class="xl:col-span-2 space-y-3">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-soft">
+        <div class="flex items-center justify-between mb-4">
+          <div class="font-semibold text-lg">Productos</div>
+          <div class="text-sm text-slate-500" *ngIf="searching()">
+            <div class="flex items-center gap-2">
+              <div class="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+              Buscando…
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white border border-slate-200 rounded-2xl shadow-soft p-5 mb-4">
+          <div class="text-sm font-medium text-slate-700 mb-3">Filtrar por categorías</div>
+          <div class="flex flex-wrap gap-2">
+            <button type="button"
+                    class="px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200"
+                    [class.bg-blue-600]="selectedCats().size === 0"
+                    [class.text-white]="selectedCats().size === 0"
+                    [class.bg-blue-50]="selectedCats().size === 0"
+                    [class.border-blue-200]="selectedCats().size === 0"
+                    [class.hover:bg-blue-100]="selectedCats().size === 0"
+                    (click)="clearCats()">
+              Todas las categorías
+            </button>
+            <button *ngFor="let c of categories"
+                    type="button"
+                    class="px-4 py-2 rounded-full text-sm font-medium border border-slate-200 hover:border-blue-300 transition-all duration-200"
+                    [class.bg-blue-600]="selectedCats().has(c.id)"
+                    [class.text-white]="selectedCats().has(c.id)"
+                    [class.border-blue-600]="selectedCats().has(c.id)"
+                    (click)="toggleCat(c.id)">
+              {{ c.name }}
+            </button>
+          </div>
+        </div>
+
+        <div *ngIf="!results.length && !searching()" class="text-center py-8 text-slate-500">
+          <svg class="w-12 h-12 mx-auto text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m8-6V4a1 1 0 00-1-1h-2a1 1 0 00-1 1v3M9 7h6">
+            </path>
+          </svg>
+          No hay productos disponibles.
+        </div>
+
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[calc(100vh-300px)] overflow-y-auto pr-2"
+          *ngIf="results.length"
+        >
+          <!-- Tarjeta de producto -->
+          <div *ngFor="let p of results" class="border border-slate-200 rounded-xl p-3 hover:shadow-md transition-all duration-200 bg-white">
+            <div class="flex gap-3">
+              <div class="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden shrink-0">
+                <img [src]="imageUrl(p)" (error)="onImgError($event)" class="w-full h-full object-cover" alt="Producto" />
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                  <div class="font-medium text-slate-800 truncate">{{ p.name }}</div>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs"
+                        [class.bg-emerald-50]="p.is_active"
+                        [class.text-emerald-700]="p.is_active"
+                        [class.bg-slate-100]="!p.is_active"
+                        [class.text-slate-600]="!p.is_active">
+                    {{ p.is_active ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+
+                <div class="text-xs text-slate-500 font-mono truncate mb-2">{{ p.sku }}</div>
+
+                <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                  <div class="col-span-2">
+                    <span class="text-slate-500 text-xs">Precio USD:</span>
+                    <span class="font-semibold">{{ p.price_usd || 0 | number:'1.2-2' }}</span>
+                  </div>
+
+                  <div *ngIf="displayStock(p) !== null; else noSede"
+                       [class.text-emerald-700]="(displayStock(p) ?? 0) > 0"
+                       [class.text-rose-600]="(displayStock(p) ?? 0) <= 0"
+                       class="col-span-2">
+                    <span class="text-slate-500 text-xs">Disponible:</span> {{ displayStock(p) }}
+                  </div>
+                  <ng-template #noSede>
+                    <div class="text-slate-500 col-span-2"><span class="text-xs">Disponible:</span> global</div>
+                  </ng-template>
+
+                  <div *ngIf="qtyInCart(p) > 0" class="col-span-2 text-blue-600">
+                    <span class="text-slate-500 text-xs">En carrito:</span> {{ qtyInCart(p) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Controles ± -->
+            <div class="flex items-center justify-between mt-2">
+              <div class="text-sm text-slate-500">
+                <span *ngIf="availableNow(p) > 0">{{ availableNow(p) }} disponibles</span>
+                <span *ngIf="availableNow(p) <= 0" class="text-rose-600">Sin stock</span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button
+                  class="h-8 w-8 grid place-content-center rounded-lg border hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="qtyInCart(p) <= 0"
+                  (click)="decOne(p)"
+                >−</button>
+
+                <div class="w-6 text-center font-medium select-none">{{ qtyInCart(p) || 0 }}</div>
+
+                <button
+                  class="h-8 w-8 grid place-content-center rounded-lg border hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  [disabled]="availableNow(p) <= 0"
+                  (click)="addOne(p)"
+                >+</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carrito (integrado) -->
+    <div class="space-y-3">
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-soft sticky top-4">
+        <div class="flex items-center justify-between mb-4">
+          <div class="font-semibold text-lg">Carrito</div>
+          <div class="text-sm text-slate-500 bg-slate-100 px-2 py-1 rounded-full">{{ cart().length }} ítems</div>
+        </div>
+
+        <div *ngIf="cartEmpty()" class="text-center py-8 text-slate-500">
+          <svg class="w-12 h-12 mx-auto text-slate-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+            </path>
+          </svg>
+          Tu carrito está vacío
+        </div>
+
+        <div *ngIf="!cartEmpty()" class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+          <div *ngFor="let it of cart()" class="border border-slate-200 rounded-xl p-3 bg-slate-50">
+            <div class="flex justify-between items-start mb-2">
+              <div class="flex-1 min-w-0">
+                <div class="font-medium text-slate-800 truncate">{{ it.product.name }}</div>
+                <div class="text-xs text-slate-500 font-mono truncate">{{ it.product.sku }}</div>
+              </div>
+              <button class="text-slate-400 hover:text-rose-500 transition-colors" (click)="remove(it)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+
+            <div class="text-xs mb-3"
+                 [class.text-emerald-700]="stockInSelectedStore(it.product) - it.quantity >= 0"
+                 [class.text-rose-600]="stockInSelectedStore(it.product) - it.quantity < 0">
+              <ng-container *ngIf="storeCtrl.value; else selSedeMsg">
+                Disponible: {{ stockInSelectedStore(it.product) }} • Quedan:
+                {{ stockInSelectedStore(it.product) - it.quantity | number:'1.0-0' }}
+              </ng-container>
+              <ng-template #selSedeMsg>
+                Selecciona sede para validar existencias.
+              </ng-template>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <div class="inline-flex items-center gap-2">
+                <button class="w-6 h-6 rounded-lg border hover:bg-slate-100 transition-colors flex items-center justify-center"
+                        (click)="inc(it, -1)">-</button>
+                <span class="w-8 inline-block text-center font-medium">{{ it.quantity }}</span>
+                <button class="w-6 h-6 rounded-lg border hover:bg-slate-100 transition-colors flex items-center justify-center"
+                        (click)="inc(it, +1)">+</button>
+              </div>
+
+              <div class="text-right">
+                <div class="text-sm font-medium">
+                  {{ (it.unitUSD * it.quantity) | number:'1.2-2' }} USD
+                </div>
+                <div class="text-xs text-slate-500">
+                  {{ it.unitUSD | number:'1.2-2' }} USD c/u
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!cartEmpty()" class="mt-4 pt-4 border-t border-slate-200 space-y-3">
+          <div class="flex justify-between text-slate-600">
+            <span>Subtotal:</span>
+            <span class="font-semibold text-slate-800">{{ subtotalUSD() | number:'1.2-2' }} USD</span>
+          </div>
+
+          <div class="flex justify-between text-lg font-semibold pt-2 border-t border-slate-200">
+            <span>Total:</span>
+            <span class="text-2xl">{{ subtotalUSD() | number:'1.2-2' }} USD</span>
+          </div>
+
+          <!-- ✅ CAMBIO: ahora abre modal -->
+          <button
+            class="w-full rounded-xl bg-blue-600 text-white px-4 py-3 hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            [disabled]="cartEmpty()"
+            (click)="openCheckout()"
+          >
+            Facturar
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- /grid -->
+
+<!-- ===================== MODAL CHECKOUT ===================== -->
+<div *ngIf="showCheckout()"
+     class="fixed inset-0 z-50 flex items-center justify-center p-4">
+
+  <!-- backdrop con blur -->
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+       (click)="closeCheckout()"></div>
+
+  <!-- modal -->
+  <div class="relative w-full max-w-5xl bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+    <!-- header -->
+    <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+      <div class="font-semibold text-slate-800">Confirmar facturación</div>
+
+      <button class="w-9 h-9 grid place-content-center rounded-xl hover:bg-slate-100 transition-colors"
+              (click)="closeCheckout()"
+              [disabled]="checkingOut()"
+              aria-label="Cerrar">
+        <svg class="w-5 h-5 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- body -->
+    <div class="p-6 grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
+
+      <!-- ================= LEFT: Items + Datos factura ================= -->
+      <div class="space-y-4">
+
+        <!-- items -->
+        <div class="border border-slate-200 rounded-xl overflow-hidden">
+          <div class="px-4 py-2 bg-slate-50 text-sm font-medium text-slate-700">
+            Productos a facturar ({{ cart().length }} ítems)
+          </div>
+
+          <div class="max-h-[280px] overflow-y-auto divide-y divide-slate-200">
+            <div *ngFor="let it of cart()" class="px-4 py-3 flex items-start gap-3">
+              <div class="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
+                <img [src]="imageUrl(it.product)"
+                     (error)="onImgError($event)"
+                     class="w-full h-full object-cover"
+                     alt="Producto" />
+              </div>
+
+              <div class="min-w-0 flex-1">
+                <div class="font-medium text-slate-800 truncate">{{ it.product.name }}</div>
+                <div class="text-xs text-slate-500 font-mono truncate">{{ it.product.sku }}</div>
+                <div class="text-xs text-slate-500 mt-1">
+                  Cantidad: <span class="font-semibold text-slate-700">{{ it.quantity }}</span>
+                </div>
+              </div>
+
+              <!-- precios: se muestran según payment_method -->
+              <div class="text-right shrink-0">
+                <div class="text-sm font-semibold text-slate-800">
+                  <ng-container *ngIf="paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS'; else lineVES">
+                    {{ (it.unitUSD * it.quantity) | number:'1.2-2' }} USD
+                  </ng-container>
+                  <ng-template #lineVES>
+                    {{ (unitVES(it) * it.quantity) | number:'1.2-2' }} Bs
+                  </ng-template>
+                </div>
+
+                <div class="text-xs text-slate-500">
+                  <ng-container *ngIf="paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS'; else unitLineVES">
+                    {{ it.unitUSD | number:'1.2-2' }} USD c/u
+                  </ng-container>
+                  <ng-template #unitLineVES>
+                    {{ unitVES(it) | number:'1.2-2' }} Bs c/u
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- datos facturación -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4">
+          <div class="text-sm font-medium text-slate-700 mb-3">Datos de facturación</div>
+
+          <div class="grid gap-3 md:grid-cols-2">
+            <div class="md:col-span-2">
+              <label class="text-xs text-slate-600">Nombre o Razón Social</label>
+              <input type="text"
+                     [formControl]="customerNameCtrl"
+                     placeholder="Ej: Andrea Shop C.A."
+                     class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div class="md:col-span-2">
+              <label class="text-xs text-slate-600">Domicilio fiscal</label>
+              <input type="text"
+                     [formControl]="customerAddressCtrl"
+                     placeholder="Dirección del cliente"
+                     class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div>
+              <label class="text-xs text-slate-600">Número de cédula</label>
+              <input type="text"
+                     [formControl]="customerIdDocCtrl"
+                     placeholder="V-12345678"
+                     class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div>
+              <label class="text-xs text-slate-600">Teléfono</label>
+              <input type="text"
+                     [formControl]="customerPhoneCtrl"
+                     placeholder="0412-1234567"
+                     class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div class="md:col-span-2 text-xs text-slate-500">
+              * Si el pago es <span class="font-semibold">Pago móvil</span> o <span class="font-semibold">Punto</span>, se factura con IVA (requiere Nombre y Cédula).
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= RIGHT: Pago + Totales + Acciones ================= -->
+      <div class="space-y-4">
+
+        <!-- forma de pago -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <div class="text-sm font-medium text-slate-700 mb-2">Forma de pago</div>
+
+          <div class="grid gap-2">
+            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700">
+              <input type="radio" [value]="'PAGO_MOVIL'" [formControl]="paymentMethodCtrl"
+                     class="text-blue-600 focus:ring-blue-500">
+              Pago móvil (Bs, con IVA)
+            </label>
+
+            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700">
+              <input type="radio" [value]="'PUNTO'" [formControl]="paymentMethodCtrl"
+                     class="text-blue-600 focus:ring-blue-500">
+              Punto (Bs, con IVA)
+            </label>
+
+            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700">
+              <input type="radio" [value]="'DIVISAS'" [formControl]="paymentMethodCtrl"
+                     class="text-blue-600 focus:ring-blue-500">
+              Divisas (USD, sin IVA)
+            </label>
+
+            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700">
+              <input type="radio" [value]="'USDT'" [formControl]="paymentMethodCtrl"
+                     class="text-blue-600 focus:ring-blue-500">
+              USDT (USD, sin IVA)
+            </label>
+          </div>
+
+          <!-- referencia pago móvil -->
+          <div class="mt-3" *ngIf="paymentMethodCtrl.value === 'PAGO_MOVIL'">
+            <label class="text-xs text-slate-600">Referencia de Pago móvil *</label>
+            <input type="text"
+                   [formControl]="paymentRefCtrl"
+                   placeholder="Ej: 1234567890"
+                   class="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <div class="text-xs text-slate-500 mt-1">Se guardará en el sistema y saldrá en la factura.</div>
+          </div>
+
+          <!-- tasa solo informativa cuando es Bs -->
+          <div class="text-xs text-slate-500 mt-3"
+               *ngIf="paymentMethodCtrl.value === 'PAGO_MOVIL' || paymentMethodCtrl.value === 'PUNTO'">
+            Tasa vigente (referencia): 1 USD = {{ fx() | number:'1.2-4' }} Bs
+          </div>
+        </div>
+
+        <!-- totales (según payment_method) -->
+        <div class="bg-white border border-slate-200 rounded-xl p-4 space-y-2">
+          <div class="flex justify-between text-slate-600 text-sm">
+            <span>Total USD:</span>
+            <span class="font-semibold text-slate-800">{{ subtotalUSD() | number:'1.2-2' }}</span>
+          </div>
+          <div class="flex justify-between text-slate-600 text-sm">
+            <span>Total Bs:</span>
+            <span class="font-semibold text-slate-800">{{ subtotalVES() | number:'1.2-2' }}</span>
+          </div>
+
+          <div class="pt-2 border-t border-slate-200 flex justify-between items-end">
+            <div class="text-sm font-semibold text-slate-700">
+              TOTAL A PAGAR
+              <span class="text-xs font-normal text-slate-500">
+                ({{ (paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS') ? 'USD' : 'Bs' }})
+              </span>
+            </div>
+
+            <div class="text-2xl font-bold text-slate-900">
+              <ng-container *ngIf="paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS'; else totalBsTpl">
+                {{ subtotalUSD() | number:'1.2-2' }}
+              </ng-container>
+              <ng-template #totalBsTpl>
+                {{ subtotalVES() | number:'1.2-2' }}
+              </ng-template>
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-500 pt-2 border-t border-slate-200">
+            * El IVA se desglosa en el backend solo para Pago móvil y Punto.
+          </div>
+        </div>
+
+        <!-- acciones -->
+        <div class="flex items-center justify-end gap-2">
+          <button class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+                  (click)="closeCheckout()"
+                  [disabled]="checkingOut()">
+            Cancelar
+          </button>
+
+          <button class="px-5 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2"
+                  (click)="confirmCheckout()"
+                  [disabled]="checkingOut() || cartEmpty()">
+            <ng-container *ngIf="!checkingOut(); else busyTpl">
+              Facturar
+            </ng-container>
+            <ng-template #busyTpl>
+              <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Procesando…
+            </ng-template>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- bloqueo extra si está procesando -->
+    <div *ngIf="checkingOut()" class="absolute inset-0 bg-white/40"></div>
+  </div>
+</div>
+<!-- =================== /MODAL CHECKOUT ====================== -->
+

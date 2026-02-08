@@ -1,0 +1,24 @@
+<div class="min-h-screen grid place-items-center bg-slate-50 p-6">
+  <div class="w-full max-w-sm bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+    <div class="mb-6">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-500 to-sky-500 shadow"></div>
+      <h1 class="mt-3 text-xl font-semibold text-slate-800">Iniciar sesión</h1>
+      <p class="text-sm text-slate-500">Usa tu usuario y contraseña.</p>
+    </div>
+
+    <form (ngSubmit)="submit()" [formGroup]="form" novalidate>
+      <label class="block text-sm text-slate-600 mb-1">Usuario</label>
+      <input formControlName="username" class="w-full mb-3 rounded-xl border-slate-300 px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500">
+
+      <label class="block text-sm text-slate-600 mb-1">Contraseña</label>
+      <input type="password" formControlName="password" class="w-full mb-4 rounded-xl border-slate-300 px-3 py-2 text-sm focus:ring-blue-500 focus:border-blue-500">
+
+      <div *ngIf="error" class="text-xs text-rose-600 mb-3">{{ error }}</div>
+
+      <button type="submit" [disabled]="loading"
+        class="w-full rounded-xl bg-blue-600 text-white py-2.5 hover:bg-blue-700 disabled:opacity-60">
+        {{ loading ? 'Entrando…' : 'Entrar' }}
+      </button>
+    </form>
+  </div>
+</div>

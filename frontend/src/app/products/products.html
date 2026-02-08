@@ -1,0 +1,78 @@
+<div class="flex items-end gap-2 mb-3">
+    <div>
+      <label class="text-xs text-gray-500">Buscar</label>
+      <input class="border rounded px-2 py-1" [(ngModel)]="q" (keyup.enter)="fetch()">
+    </div>
+    <div>
+      <label class="text-xs text-gray-500">Categoría (slug)</label>
+      <select class="border rounded px-2 py-1" [(ngModel)]="category">
+        <option value="">--</option>
+        <option *ngFor="let c of categories" [value]="c.slug">{{c.name}}</option>
+      </select>
+    </div>
+    <div>
+      <label class="text-xs text-gray-500">Sede (code)</label>
+      <select class="border rounded px-2 py-1" [(ngModel)]="store">
+        <option value="">--</option>
+        <option *ngFor="let s of stores" [value]="s.code">{{s.name}} ({{s.id}})</option>
+      </select>
+    </div>
+    <div>
+      <label class="text-xs text-gray-500">Activo</label>
+      <select class="border rounded px-2 py-1" [(ngModel)]="is_active">
+        <option value="">--</option>
+        <option [value]="true">Sí</option>
+        <option [value]="false">No</option>
+      </select>
+    </div>
+    <div>
+      <label class="text-xs text-gray-500">Mín. stock</label>
+      <input type="number" class="border rounded px-2 py-1 w-24" [(ngModel)]="min_stock">
+    </div>
+    <button class="bg-black text-white rounded px-3 py-2" (click)="fetch()">Filtrar</button>
+    <a routerLink="/products/new" class="ml-auto border rounded px-3 py-2">+ Nuevo</a>
+  </div>
+  
+  <div *ngIf="loading">Cargando...</div>
+  <div *ngIf="err" class="text-red-600">{{err}}</div>
+  
+  <div class="bg-white border rounded-xl overflow-hidden">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="p-2 text-left">SKU</th>
+          <th class="p-2 text-left">Nombre</th>
+          <th class="p-2">Activo</th>
+          <th class="p-2">Stock total</th>
+          <th class="p-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of items" class="border-t">
+          <td class="p-2">{{p.sku}}</td>
+          <td class="p-2">
+            <div class="font-medium">{{p.name}}</div>
+            <div class="text-xs text-gray-500">ID: {{p.id}}</div>
+            <div class="text-xs" *ngIf="p.stocks_detail?.length">
+              <span *ngFor="let s of p.stocks_detail" class="mr-2">
+                {{s.store_code}}: {{s.quantity}}
+              </span>
+            </div>
+          </td>
+          <td class="p-2 text-center">
+            <span class="px-2 py-0.5 rounded text-xs"
+                  [class.bg-emerald-100]="p.is_active"
+                  [class.text-emerald-700]="p.is_active"
+                  [class.bg-gray-100]="!p.is_active"
+                  [class.text-gray-700]="!p.is_active">{{p.is_active ? 'Sí' : 'No'}}</span>
+          </td>
+          <td class="p-2 text-center">{{p.total_stock}}</td>
+          <td class="p-2 space-x-2 text-center">
+            <button class="px-2 py-1 border rounded" (click)="setStock(p)">Set stock</button>
+            <button class="px-2 py-1 border rounded" (click)="adjustStock(p)">Ajuste +/-</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
