@@ -4,17 +4,15 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .auth import CookieJWTAuthentication
-from .serializers import RegisterSerializer, LoginSerializer, MeSerializer
+from .serializers import LoginSerializer, MeSerializer
 
 COOKIE_ACCESS  = "access"
 COOKIE_REFRESH = "refresh"
 
 def _set_token_cookies(response, access, refresh):
-    # En dev: SameSite=Lax + Secure=False funciona si usas MISMO host
     response.set_cookie(COOKIE_ACCESS,  str(access),  httponly=True, secure=False, samesite="Lax", path="/")
     response.set_cookie(COOKIE_REFRESH, str(refresh), httponly=True, secure=False, samesite="Lax", path="/")
     return response
@@ -27,12 +25,14 @@ def _clear_token_cookies(response):
 @ensure_csrf_cookie
 @api_view(["GET"])
 @permission_classes([AllowAny])
+@authentication_classes([])
 def csrf_cookie(_request):
     # Coloca 'csrftoken' en el navegador
     return Response({"detail": "ok"})
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
+@authentication_classes([]) 
 def login(request):
     ser = LoginSerializer(data=request.data)
     ser.is_valid(raise_exception=True)
@@ -46,6 +46,7 @@ def login(request):
 
 @api_view(["POST"])
 @permission_classes([AllowAny])
+@authentication_classes([])
 def refresh(request):
     token = request.COOKIES.get(COOKIE_REFRESH)
     if not token:

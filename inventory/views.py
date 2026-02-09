@@ -11,7 +11,7 @@ from django.http import HttpResponse
 from django.conf import settings
 import os
 from decimal import Decimal
-
+from rest_framework.permissions import DjangoModelPermissions
 from .pdf import render_sale_pdf
 from .models import Store, Category, Product, Stock, Sale
 from .serializers import (
@@ -25,26 +25,24 @@ from .serializers import (
 from .services import adjust_stock, set_fx, get_current_fx
 from .filters import ProductFilter
 
-ReadOrAuth = permissions.IsAuthenticatedOrReadOnly
-
 # --------- CRUD básicos ---------
 
 class StoreViewSet(viewsets.ModelViewSet):
     queryset = Store.objects.all().order_by("name")
     serializer_class = StoreSerializer
-    permission_classes = [ReadOrAuth]
+    permission_classes = [DjangoModelPermissions]
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by("name")
     serializer_class = CategorySerializer
-    permission_classes = [ReadOrAuth]
+    permission_classes = [DjangoModelPermissions]
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.prefetch_related("categories", "stocks", "stocks__store").all()
     serializer_class = ProductSerializer
-    permission_classes = [ReadOrAuth]
+    permission_classes = [DjangoModelPermissions]
     filterset_class = ProductFilter
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ["sku", "name", "description", "categories__name"]
@@ -103,7 +101,7 @@ class ProductViewSet(viewsets.ModelViewSet):
         methods=["post", "delete"],
         url_path="image",
         parser_classes=[MultiPartParser, FormParser],
-        permission_classes=[permissions.IsAuthenticated],
+        permission_classes=[DjangoModelPermissions],
     )
     def image(self, request, pk=None):
         product = self.get_object()
@@ -138,7 +136,7 @@ class SaleViewSet(viewsets.ModelViewSet):
         .prefetch_related("items", "items__product")
     )
     serializer_class = SaleSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [DjangoModelPermissions]
 
     def perform_create(self, serializer):
         # created_by queda siempre ligado al user autenticado
@@ -205,7 +203,7 @@ class SaleViewSet(viewsets.ModelViewSet):
 
 # --------- FX (tasa Bs por USD) ---------
 class FxView(APIView):
-    permission_classes = [permissions.IsAuthenticated]  # o AllowAny
+    permission_classes = [DjangoModelPermissions]  # o AllowAny
     def get(self, request):
         fx = get_current_fx().quantize(Decimal("0.01"))
         return Response({"usd_to_bs": str(fx)})
@@ -227,7 +225,7 @@ class FxView(APIView):
         return Response(FxRateSerializer(fx).data, status=201)
 
 @api_view(["GET"])
-@permission_classes([permissions.IsAuthenticated])  # o AllowAny si quieres que sea público
+@permission_classes([DjangoModelPermissions])  # o AllowAny si quieres que sea público
 def stats(request):
     total_products = Product.objects.count()
     active_products = Product.objects.filter(is_active=True).count()

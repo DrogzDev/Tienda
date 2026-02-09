@@ -4,13 +4,16 @@
   <!-- Header / title -->
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <div>
-      <h1 class="text-xl font-semibold text-slate-900">Crear producto</h1>
-      <p class="text-sm text-slate-500">Completa la información básica, categorías, stock inicial y una imagen opcional.</p>
+      <h1 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Crear producto</h1>
+      <p class="text-sm text-slate-500 dark:text-slate-400">Completa la información básica, categorías, stock inicial y una imagen opcional.</p>
     </div>
 
     <div class="flex items-center gap-2">
       <a routerLink="/products"
-         class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+         class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800
+                bg-white dark:bg-slate-950/35
+                px-4 py-2 text-sm text-slate-700 dark:text-slate-200
+                hover:bg-slate-50 dark:hover:bg-slate-800/60">
         <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M15 18l-6-6 6-6"/>
         </svg>
@@ -20,7 +23,10 @@
       <button type="submit"
               form="createProductForm"
               [disabled]="saving"
-              class="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60">
+              class="inline-flex items-center gap-2 rounded-xl bg-blue-600 dark:bg-blue-500
+                     px-4 py-2 text-sm font-medium text-white
+                     hover:bg-blue-700 dark:hover:bg-blue-400
+                     disabled:opacity-60">
         <svg *ngIf="!saving" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M12 5v14M5 12h14"/>
         </svg>
@@ -34,7 +40,7 @@
 
   <!-- Form -->
   <form id="createProductForm"
-        class="bg-white rounded-2xl border border-slate-200 shadow-soft"
+        class="bg-white dark:bg-slate-900/70 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-soft"
         [formGroup]="form"
         (ngSubmit)="submit()"
         novalidate>
@@ -45,105 +51,123 @@
       <div class="xl:col-span-7 space-y-6">
 
         <!-- Card: Datos básicos -->
-        <section class="rounded-2xl border border-slate-200 bg-white">
-          <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <section class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/35">
+          <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 grid place-content-center">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M7 4h10a2 2 0 012 2v14H5V6a2 2 0 012-2zm0 4h10V6H7v2zm0 4h10v-2H7v2z"/>
+              <div class="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300 grid place-content-center">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  <path d="M12 9v.01M12 9a3 3 0 100-6 3 3 0 000 6z"/>
                 </svg>
               </div>
               <div>
-                <div class="font-semibold text-slate-900">Información básica</div>
-                <div class="text-xs text-slate-500">Nombre, Codigo, precio y descripción</div>
+                <div class="font-semibold text-slate-900 dark:text-slate-100">Información básica</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">Nombre, Codigo, precio y descripción</div>
               </div>
             </div>
 
-            <span class="text-xs text-slate-500">Campos con * son obligatorios</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">Campos con * son obligatorios</span>
           </div>
 
           <div class="p-5 grid sm:grid-cols-2 gap-4">
             <!-- Nombre -->
             <div class="sm:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-1">Nombre *</label>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Nombre *</label>
               <div class="relative">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M10 2a8 8 0 105.29 14.29l4.2 4.2 1.41-1.41-4.2-4.2A8 8 0 0010 2zm0 2a6 6 0 110 12 6 6 0 010-12z"/>
                   </svg>
                 </span>
                 <input type="text"
-                       class="w-full rounded-xl border border-slate-300 bg-white pl-10 pr-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                       class="w-full rounded-xl border border-slate-300 dark:border-slate-800
+                              bg-white dark:bg-slate-950/40
+                              text-slate-900 dark:text-slate-100
+                              placeholder:text-slate-400 dark:placeholder:text-slate-500
+                              pl-10 pr-3 py-2.5 text-sm
+                              focus:border-blue-500 focus:ring-blue-500"
                        formControlName="name"
                        (blur)="autoSkuFromName()"
                        placeholder="Ej: Teclado Mecánico" />
               </div>
-              <div *ngIf="f.name.touched && f.name.invalid" class="text-xs text-rose-600 mt-1">Requerido</div>
+              <div *ngIf="f.name.touched && f.name.invalid" class="text-xs text-rose-600 dark:text-rose-300 mt-1">Requerido</div>
             </div>
 
             <!-- SKU -->
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Codigo</label>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Codigo</label>
               <input type="text"
-                     class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 font-mono"
+                     class="w-full rounded-xl border border-slate-300 dark:border-slate-800
+                            bg-white dark:bg-slate-950/40
+                            text-slate-900 dark:text-slate-100
+                            placeholder:text-slate-400 dark:placeholder:text-slate-500
+                            px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500 font-mono"
                      formControlName="sku"
                      placeholder="ABC-001" />
-              <div *ngIf="f.sku.touched && f.sku.invalid" class="text-xs text-rose-600 mt-1">Requerido</div>
-              <div class="text-xs text-slate-500 mt-1">Tip: se autogenera desde el nombre si lo dejas vacío.</div>
+              <div *ngIf="f.sku.touched && f.sku.invalid" class="text-xs text-rose-600 dark:text-rose-300 mt-1">Requerido</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Tip: se autogenera desde el nombre si lo dejas vacío.</div>
             </div>
 
             <!-- Precio USD -->
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Precio USD *</label>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Precio USD *</label>
               <div class="relative">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-sm">$</span>
                 <input type="number"
                        step="0.01"
                        min="0"
-                       class="w-full rounded-xl border border-slate-300 bg-white pl-7 pr-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                       class="w-full rounded-xl border border-slate-300 dark:border-slate-800
+                              bg-white dark:bg-slate-950/40
+                              text-slate-900 dark:text-slate-100
+                              placeholder:text-slate-400 dark:placeholder:text-slate-500
+                              pl-7 pr-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
                        formControlName="price_usd"
                        placeholder="0.00" />
               </div>
-              <div *ngIf="f.price_usd.touched && f.price_usd.invalid" class="text-xs text-rose-600 mt-1">
+              <div *ngIf="f.price_usd.touched && f.price_usd.invalid" class="text-xs text-rose-600 dark:text-rose-300 mt-1">
                 Ingresa un precio válido.
               </div>
             </div>
 
             <!-- Descripción -->
             <div class="sm:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
+              <label class="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">Descripción</label>
               <textarea rows="4"
-                        class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                        class="w-full rounded-xl border border-slate-300 dark:border-slate-800
+                               bg-white dark:bg-slate-950/40
+                               text-slate-900 dark:text-slate-100
+                               placeholder:text-slate-400 dark:placeholder:text-slate-500
+                               px-3 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
                         formControlName="description"
                         placeholder="Detalles del producto..."></textarea>
-              <div class="text-xs text-slate-500 mt-1">Opcional. Útil para notas internas o especificaciones.</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Opcional. Útil para notas internas o especificaciones.</div>
             </div>
           </div>
         </section>
 
         <!-- Card: Imagen -->
-        <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
-          <div class="px-5 py-4 border-b border-slate-200 flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 grid place-content-center">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-9 14l-3-4-2 3v1h14l-4-6-5 6z"/>
-              </svg>
+        <section class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/35 overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 grid place-content-center">
+              <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-200 grid place-content-center">
+                <img src="https://svgsilh.com/svg/2027073.svg" class="w-5 h-5" alt="Imagen" />
+              </div>
             </div>
             <div>
-              <div class="font-semibold text-slate-900">Imagen del producto</div>
-              <div class="text-xs text-slate-500">JPG/PNG recomendado 640×640+</div>
+              <div class="font-semibold text-slate-900 dark:text-slate-100">Imagen del producto</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400">JPG/PNG recomendado 640×640+</div>
             </div>
           </div>
 
           <div class="p-5">
-            <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4">
+            <div class="rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/40 p-4">
               <div class="flex flex-col sm:flex-row items-start gap-4">
                 <div class="shrink-0">
                   <img *ngIf="imagePreview; else emptyImg"
                        [src]="imagePreview"
-                       class="w-28 h-28 rounded-2xl border border-slate-200 object-cover bg-white" />
+                       class="w-28 h-28 rounded-2xl border border-slate-200 dark:border-slate-800 object-cover bg-white dark:bg-slate-900" />
                   <ng-template #emptyImg>
-                    <div class="w-28 h-28 rounded-2xl border border-slate-200 bg-white grid place-content-center text-slate-400">
+                    <div class="w-28 h-28 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 grid place-content-center text-slate-400 dark:text-slate-500">
                       <svg class="w-8 h-8" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-9 14l-3-4-2 3v1h14l-4-6-5 6z"/>
                       </svg>
@@ -152,12 +176,13 @@
                 </div>
 
                 <div class="flex-1 w-full">
-                  <p class="text-sm text-slate-700 mb-3">
+                  <p class="text-sm text-slate-700 dark:text-slate-200 mb-3">
                     Sube una imagen para mejorar la identificación del producto en el catálogo.
                   </p>
 
                   <div class="flex flex-wrap items-center gap-3">
-                    <label class="inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white px-4 py-2.5 cursor-pointer hover:bg-slate-800 transition-colors">
+                    <label class="inline-flex items-center gap-2 rounded-xl bg-slate-900 dark:bg-blue-500 text-white px-4 py-2.5 cursor-pointer
+                                  hover:bg-slate-800 dark:hover:bg-blue-400 transition-colors">
                       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M5 20h14v-2H5v2zM5 4h14v10H5V4zm7 7l3-4 4 6H6l3-4 3 2z"/>
                       </svg>
@@ -167,7 +192,10 @@
 
                     <button type="button"
                             (click)="imageFile = null; imagePreview = null"
-                            class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+                            class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800
+                                   bg-white dark:bg-slate-950/35
+                                   px-4 py-2.5 text-sm text-slate-700 dark:text-slate-200
+                                   hover:bg-slate-50 dark:hover:bg-slate-800/60 disabled:opacity-60"
                             [disabled]="!imagePreview">
                       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/>
@@ -176,7 +204,7 @@
                     </button>
                   </div>
 
-                  <div class="text-xs text-slate-400 mt-2">Máx ~5MB (depende de tu servidor).</div>
+                  <div class="text-xs text-slate-400 dark:text-slate-500 mt-2">Máx ~5MB (depende de tu servidor).</div>
                 </div>
               </div>
             </div>
@@ -188,16 +216,16 @@
       <div class="xl:col-span-5 space-y-6">
 
         <!-- Card: Categorías -->
-        <section class="rounded-2xl border border-slate-200 bg-white">
-          <div class="px-5 py-4 border-b border-slate-200 flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 grid place-content-center">
+        <section class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/35">
+          <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300 grid place-content-center">
               <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M3 7l9-4 9 4-9 4-9-4zm0 4l9 4 9-4v6l-9 4-9-4v-6z"/>
               </svg>
             </div>
             <div>
-              <div class="font-semibold text-slate-900">Categorías</div>
-              <div class="text-xs text-slate-500">Selecciona una o varias</div>
+              <div class="font-semibold text-slate-900 dark:text-slate-100">Categorías</div>
+              <div class="text-xs text-slate-500 dark:text-slate-400">Selecciona una o varias</div>
             </div>
           </div>
 
@@ -205,49 +233,53 @@
             <ng-container *ngIf="categories?.length; else noCats">
               <div class="flex flex-wrap gap-2">
                 <label *ngFor="let c of categories"
-                       class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm hover:bg-slate-50 transition-colors">
+                       class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800
+                              bg-white dark:bg-slate-950/35
+                              px-3 py-2 text-sm
+                              hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
                   <input type="checkbox"
-                         class="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                         class="h-4 w-4 rounded border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-blue-500"
                          [checked]="(f.categories.value || []).includes(c.id)"
                          (change)="onCategoryChange(c.id, $event)" />
-                  <span class="text-slate-700">{{ c.name }}</span>
+                  <span class="text-slate-700 dark:text-slate-200">{{ c.name }}</span>
                 </label>
               </div>
 
-              <div class="mt-2 text-xs text-slate-500">Tip: puedes usar categorías para filtrar el catálogo.</div>
+              <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">Tip: puedes usar categorías para filtrar el catálogo.</div>
             </ng-container>
 
             <ng-template #noCats>
-              <p class="text-sm text-slate-500">
+              <p class="text-sm text-slate-500 dark:text-slate-400">
                 No hay categorías disponibles.
-                <a routerLink="/categories" class="text-blue-600 hover:underline">Crear categoría</a>
+                <a routerLink="/categories" class="text-blue-600 dark:text-blue-400 hover:underline">Crear categoría</a>
               </p>
             </ng-template>
 
-            <div class="mt-2 text-xs text-rose-600" *ngIf="f.categories.touched && f.categories.invalid">
+            <div class="mt-2 text-xs text-rose-600 dark:text-rose-300" *ngIf="f.categories.touched && f.categories.invalid">
               Selecciona al menos una categoría.
             </div>
           </div>
         </section>
 
         <!-- Card: Stock inicial -->
-        <section class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
-          <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
+        <section class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950/35 overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 grid place-content-center">
+              <div class="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 grid place-content-center">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M4 7h16v10H4V7zm2 2v6h12V9H6zm1 9h10v2H7v-2z"/>
                 </svg>
               </div>
               <div>
-                <div class="font-semibold text-slate-900">Cantidad inicial en el local</div>
-                <div class="text-xs text-slate-500">Opcional, puedes añadir una o varias sedes</div>
+                <div class="font-semibold text-slate-900 dark:text-slate-100">Cantidad inicial en el local</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">Opcional, puedes añadir una o varias sedes</div>
               </div>
             </div>
 
             <button type="button"
                     (click)="addStockRow()"
-                    class="inline-flex items-center gap-2 rounded-xl bg-blue-600 text-white px-3 py-2 text-sm hover:bg-blue-700 transition-colors">
+                    class="inline-flex items-center gap-2 rounded-xl bg-blue-600 dark:bg-blue-500 text-white px-3 py-2 text-sm
+                           hover:bg-blue-700 dark:hover:bg-blue-400 transition-colors">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" d="M12 5v14M5 12h14"/>
               </svg>
@@ -259,7 +291,7 @@
             <div class="overflow-x-auto">
               <table class="min-w-full text-sm">
                 <thead>
-                  <tr class="text-left text-slate-500">
+                  <tr class="text-left text-slate-500 dark:text-slate-400">
                     <th class="py-2 pr-4 font-medium">Almacén</th>
                     <th class="py-2 pr-4 font-medium">Cantidad</th>
                     <th class="py-2 pr-4 font-medium">Mín. alerta</th>
@@ -267,10 +299,13 @@
                   </tr>
                 </thead>
 
-                <tbody>
-                  <tr class="border-t border-slate-200" *ngFor="let g of stocks.controls; let i = index" [formGroup]="g">
+                <tbody class="dark:text-slate-200">
+                  <tr class="border-t border-slate-200 dark:border-slate-800" *ngFor="let g of stocks.controls; let i = index" [formGroup]="g">
                     <td class="py-3 pr-4">
-                      <select class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                      <select class="w-full rounded-xl border border-slate-300 dark:border-slate-800
+                                     bg-white dark:bg-slate-950/40
+                                     text-slate-900 dark:text-slate-100
+                                     px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                               formControlName="store_id">
                         <option [ngValue]="null">Selecciona…</option>
                         <option *ngFor="let s of stores" [ngValue]="s.id">{{ s.name }} ({{ s.code }})</option>
@@ -279,21 +314,30 @@
 
                     <td class="py-3 pr-4">
                       <input type="number" min="0"
-                             class="w-28 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                             class="w-28 rounded-xl border border-slate-300 dark:border-slate-800
+                                    bg-white dark:bg-slate-950/40
+                                    text-slate-900 dark:text-slate-100
+                                    px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                              formControlName="quantity" />
                     </td>
 
                     <td class="py-3 pr-4">
                       <input type="number" min="0"
-                             class="w-28 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+                             class="w-28 rounded-xl border border-slate-300 dark:border-slate-800
+                                    bg-white dark:bg-slate-950/40
+                                    text-slate-900 dark:text-slate-100
+                                    px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500"
                              formControlName="min_threshold" />
                     </td>
 
                     <td class="py-3 text-right">
                       <button type="button"
                               (click)="removeStockRow(i)"
-                              class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors">
-                        <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                              class="inline-flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-800
+                                     bg-white dark:bg-slate-950/35
+                                     px-3 py-2 text-sm text-slate-700 dark:text-slate-200
+                                     hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
+                        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/>
                         </svg>
                         Quitar
@@ -303,7 +347,7 @@
                 </tbody>
               </table>
 
-              <div class="text-xs text-rose-600 mt-3" *ngIf="error">{{ error }}</div>
+              <div class="text-xs text-rose-600 dark:text-rose-300 mt-3" *ngIf="error">{{ error }}</div>
             </div>
           </div>
         </section>
@@ -312,20 +356,24 @@
     </div>
 
     <!-- Footer -->
-    <div class="border-t border-slate-200 px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-      <div class="text-xs text-slate-500">
+    <div class="border-t border-slate-200 dark:border-slate-800 px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="text-xs text-slate-500 dark:text-slate-400">
         Revisa los campos requeridos antes de guardar.
       </div>
 
       <div class="flex items-center justify-end gap-3">
         <a routerLink="/products"
-           class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-700 hover:bg-slate-50">
+           class="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800
+                  bg-white dark:bg-slate-950/35
+                  text-sm text-slate-700 dark:text-slate-200
+                  hover:bg-slate-50 dark:hover:bg-slate-800/60">
           Cancelar
         </a>
 
         <button type="submit"
                 [disabled]="saving"
-                class="px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 disabled:opacity-60">
+                class="px-4 py-2.5 rounded-xl bg-blue-600 dark:bg-blue-500 text-white text-sm font-medium
+                       hover:bg-blue-700 dark:hover:bg-blue-400 disabled:opacity-60">
           {{ saving ? 'Guardando…' : 'Crear producto' }}
         </button>
       </div>

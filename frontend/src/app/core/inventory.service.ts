@@ -6,7 +6,6 @@ import { Api } from './api.service';
 export type PayCurrency = "USD" | "VES";
 export type PaymentMethod = "PAGO_MOVIL" | "PUNTO" | "DIVISAS" | "USDT";
 
-
 /** ===== Tipos ===== */
 export interface Store {
   id: number;
