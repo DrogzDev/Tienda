@@ -1,22 +1,23 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './shell.html',
 })
 export class ShellComponent implements OnInit {
   sidebarCollapsed = signal(false);
   sidebarOpen = signal(false);
 
-  navItems: Array<{ to: string; label: string; icon: 'home' | 'products' | 'add' | 'sales' }> = [
+  navItems: Array<{ to: string; label: string; icon: 'home' | 'products' | 'add' | 'sales'|'alert' }> = [
     { to: '/home', label: 'Home', icon: 'home' },
     { to: '/products', label: 'Productos', icon: 'products' },
     { to: '/products/new', label: 'Crear Producto', icon: 'add' },
     { to: '/sales', label: 'Ventas', icon: 'sales' },
+    { to: '/alertas', label: 'Alertas', icon: 'alert' },
   ];
 
   toggleCollapse(): void {

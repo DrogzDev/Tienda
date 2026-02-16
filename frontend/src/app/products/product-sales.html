@@ -13,9 +13,11 @@
                  px-3 py-2
                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           [formControl]="storeCtrl"
-        >
+          >
           <option [ngValue]="null">Selecciona…</option>
-          <option *ngFor="let s of stores" [ngValue]="s.id">{{ s.name }} ({{ s.code }})</option>
+          @for (s of stores; track s) {
+            <option [ngValue]="s.id">{{ s.name }} ({{ s.code }})</option>
+          }
         </select>
       </div>
 
@@ -31,518 +33,499 @@
                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           [formControl]="search"
           placeholder="Nombre o SKU…"
-        >
+          >
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Layout principal: lista + carrito -->
-  <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
+    <!-- Layout principal: lista + carrito -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
 
-    <!-- Productos -->
-    <div class="xl:col-span-2 space-y-3">
-      <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-soft">
-        <div class="flex items-center justify-between mb-4">
-          <div class="font-semibold text-lg text-slate-900 dark:text-slate-100">Productos</div>
+      <!-- Productos -->
+      <div class="xl:col-span-2 space-y-3">
+        <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-soft">
+          <div class="flex items-center justify-between mb-4">
+            <div class="font-semibold text-lg text-slate-900 dark:text-slate-100">Productos</div>
 
-          <div class="text-sm text-slate-500 dark:text-slate-400" *ngIf="searching()">
-            <div class="flex items-center gap-2">
-              <div class="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-              Buscando…
-            </div>
+            @if (searching()) {
+              <div class="text-sm text-slate-500 dark:text-slate-400">
+                <div class="flex items-center gap-2">
+                  <div class="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                  Buscando…
+                </div>
+              </div>
+            }
           </div>
-        </div>
 
-        <!-- Filtrar por categorías -->
-        <div class="bg-white dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-soft p-5 mb-4">
-          <div class="text-sm font-medium text-slate-700 dark:text-slate-200 mb-3">Filtrar por categorías</div>
+          <!-- Filtrar por categorías -->
+          <div class="bg-white dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-soft p-5 mb-4">
+            <div class="text-sm font-medium text-slate-700 dark:text-slate-200 mb-3">Filtrar por categorías</div>
 
-          <div class="flex flex-wrap gap-2">
-            <button type="button"
+            <div class="flex flex-wrap gap-2">
+              <button type="button"
                     class="px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200
                            border-slate-200 dark:border-slate-800
                            text-slate-700 dark:text-slate-200
                            hover:bg-slate-100 dark:hover:bg-slate-800/60"
-                    [class.bg-blue-600]="selectedCats().size === 0"
-                    [class.text-white]="selectedCats().size === 0"
-                    [class.border-blue-600]="selectedCats().size === 0"
-                    (click)="clearCats()">
-              Todas las categorías
-            </button>
+                [class.bg-blue-600]="selectedCats().size === 0"
+                [class.text-white]="selectedCats().size === 0"
+                [class.border-blue-600]="selectedCats().size === 0"
+                (click)="clearCats()">
+                Todas las categorías
+              </button>
 
-            <button *ngFor="let c of categories"
-                    type="button"
+              @for (c of categories; track c) {
+                <button
+                  type="button"
                     class="px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200
                            border-slate-200 dark:border-slate-800
                            text-slate-700 dark:text-slate-200
                            hover:bg-slate-100 dark:hover:bg-slate-800/60
                            hover:border-blue-300 dark:hover:border-blue-500/60"
-                    [class.bg-blue-600]="selectedCats().has(c.id)"
-                    [class.text-white]="selectedCats().has(c.id)"
-                    [class.border-blue-600]="selectedCats().has(c.id)"
-                    (click)="toggleCat(c.id)">
-              {{ c.name }}
-            </button>
+                  [class.bg-blue-600]="selectedCats().has(c.id)"
+                  [class.text-white]="selectedCats().has(c.id)"
+                  [class.border-blue-600]="selectedCats().has(c.id)"
+                  (click)="toggleCat(c.id)">
+                  {{ c.name }}
+                </button>
+              }
+            </div>
           </div>
-        </div>
 
-        <!-- empty -->
-        <div *ngIf="!results.length && !searching()" class="text-center py-8 text-slate-500 dark:text-slate-400">
-          <svg class="w-12 h-12 mx-auto text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m8-6V4a1 1 0 00-1-1h-2a1 1 0 00-1 1v3M9 7h6">
-            </path>
-          </svg>
-          No hay productos disponibles.
-        </div>
+          <!-- empty -->
+          @if (!results.length && !searching()) {
+            <div class="text-center py-8 text-slate-500 dark:text-slate-400">
+              <svg class="w-12 h-12 mx-auto text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m8-6V4a1 1 0 00-1-1h-2a1 1 0 00-1 1v3M9 7h6">
+                </path>
+              </svg>
+              No hay productos disponibles.
+            </div>
+          }
 
-        <!-- results -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[calc(100vh-300px)] overflow-y-auto pr-2"
-          *ngIf="results.length"
-        >
-          <!-- Tarjeta de producto -->
-          <div *ngFor="let p of results"
+          <!-- results -->
+          @if (results.length) {
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[calc(100vh-300px)] overflow-y-auto pr-2"
+              >
+              <!-- Tarjeta de producto -->
+              @for (p of results; track p) {
+                <div
                class="border border-slate-200 dark:border-slate-800 rounded-xl p-3
                       bg-white dark:bg-slate-950/35
                       hover:shadow-md transition-all duration-200">
-            <div class="flex gap-3">
-              <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0 border border-transparent dark:border-slate-800">
-                <img [src]="imageUrl(p)" (error)="onImgError($event)" class="w-full h-full object-cover" alt="Producto" />
-              </div>
-
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-2 mb-1">
-                  <div class="font-medium text-slate-800 dark:text-slate-100 truncate">{{ p.name }}</div>
-
-                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs"
-                        [class.bg-emerald-50]="p.is_active"
-                        [class.text-emerald-700]="p.is_active"
-                        [class.bg-slate-100]="!p.is_active"
-                        [class.text-slate-600]="!p.is_active"
-                        [class.dark:bg-emerald-500]="p.is_active"
-                        [class.dark:text-emerald-200]="p.is_active"
-                        [class.dark:bg-slate-800]="!p.is_active"
-                        [class.dark:text-slate-300]="!p.is_active">
-                    {{ p.is_active ? 'Activo' : 'Inactivo' }}
-                  </span>
-                </div>
-
-                <div class="text-xs text-slate-500 dark:text-slate-400 font-mono truncate mb-2">{{ p.sku }}</div>
-
-                <div class="grid grid-cols-2 gap-2 text-sm mb-3">
-                  <div class="col-span-2 text-slate-900 dark:text-slate-100">
-                    <span class="text-slate-500 dark:text-slate-400 text-xs">Precio USD:</span>
-                    <span class="font-semibold">{{ p.price_usd || 0 | number:'1.2-2' }}</span>
+                  <div class="flex gap-3">
+                    <div class="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0 border border-transparent dark:border-slate-800">
+                      <img [src]="imageUrl(p)" (error)="onImgError($event)" class="w-full h-full object-cover" alt="Producto" />
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <div class="flex items-center gap-2 mb-1">
+                        <div class="font-medium text-slate-800 dark:text-slate-100 truncate">{{ p.name }}</div>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs"
+                          [class.bg-emerald-50]="p.is_active"
+                          [class.text-emerald-700]="p.is_active"
+                          [class.bg-slate-100]="!p.is_active"
+                          [class.text-slate-600]="!p.is_active"
+                          [class.dark:bg-emerald-500]="p.is_active"
+                          [class.dark:text-emerald-200]="p.is_active"
+                          [class.dark:bg-slate-800]="!p.is_active"
+                          [class.dark:text-slate-300]="!p.is_active">
+                          {{ p.is_active ? 'Activo' : 'Inactivo' }}
+                        </span>
+                      </div>
+                      <div class="text-xs text-slate-500 dark:text-slate-400 font-mono truncate mb-2">{{ p.sku }}</div>
+                      <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                        <div class="col-span-2 text-slate-900 dark:text-slate-100">
+                          <span class="text-slate-500 dark:text-slate-400 text-xs">Precio USD:</span>
+                          <span class="font-semibold">{{ p.price_usd || 0 | number:'1.2-2' }}</span>
+                        </div>
+                        @if (displayStock(p) !== null) {
+                          <div
+                            class="col-span-2"
+                            [class.text-emerald-700]="(displayStock(p) ?? 0) > 0"
+                            [class.text-rose-600]="(displayStock(p) ?? 0) <= 0"
+                            [class.dark:text-emerald-300]="(displayStock(p) ?? 0) > 0"
+                            [class.dark:text-rose-300]="(displayStock(p) ?? 0) <= 0">
+                            <span class="text-slate-500 dark:text-slate-400 text-xs">Disponible:</span> {{ displayStock(p) }}
+                          </div>
+                        } @else {
+                          <div class="text-slate-500 dark:text-slate-400 col-span-2"><span class="text-xs">Disponible:</span> global</div>
+                        }
+                        @if (qtyInCart(p) > 0) {
+                          <div class="col-span-2 text-blue-600 dark:text-blue-400">
+                            <span class="text-slate-500 dark:text-slate-400 text-xs">En carrito:</span> {{ qtyInCart(p) }}
+                          </div>
+                        }
+                      </div>
+                    </div>
                   </div>
-
-                  <div *ngIf="displayStock(p) !== null; else noSede"
-                       class="col-span-2"
-                       [class.text-emerald-700]="(displayStock(p) ?? 0) > 0"
-                       [class.text-rose-600]="(displayStock(p) ?? 0) <= 0"
-                       [class.dark:text-emerald-300]="(displayStock(p) ?? 0) > 0"
-                       [class.dark:text-rose-300]="(displayStock(p) ?? 0) <= 0">
-                    <span class="text-slate-500 dark:text-slate-400 text-xs">Disponible:</span> {{ displayStock(p) }}
-                  </div>
-
-                  <ng-template #noSede>
-                    <div class="text-slate-500 dark:text-slate-400 col-span-2"><span class="text-xs">Disponible:</span> global</div>
-                  </ng-template>
-
-                  <div *ngIf="qtyInCart(p) > 0" class="col-span-2 text-blue-600 dark:text-blue-400">
-                    <span class="text-slate-500 dark:text-slate-400 text-xs">En carrito:</span> {{ qtyInCart(p) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Controles ± -->
-            <div class="flex items-center justify-between mt-2">
-              <div class="text-sm text-slate-500 dark:text-slate-400">
-                <span *ngIf="availableNow(p) > 0">{{ availableNow(p) }} disponibles</span>
-                <span *ngIf="availableNow(p) <= 0" class="text-rose-600 dark:text-rose-300">Sin stock</span>
-              </div>
-
-              <div class="flex items-center gap-2">
-                <button
+                  <!-- Controles ± -->
+                  <div class="flex items-center justify-between mt-2">
+                    <div class="text-sm text-slate-500 dark:text-slate-400">
+                      @if (availableNow(p) > 0) {
+                        <span>{{ availableNow(p) }} disponibles</span>
+                      }
+                      @if (availableNow(p) <= 0) {
+                        <span class="text-rose-600 dark:text-rose-300">Sin stock</span>
+                      }
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <button
                   class="h-8 w-8 grid place-content-center rounded-lg border border-slate-200 dark:border-slate-800
                          hover:bg-slate-50 dark:hover:bg-slate-800/60
                          text-slate-900 dark:text-slate-100
                          transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  [disabled]="qtyInCart(p) <= 0"
-                  (click)="decOne(p)"
-                >−</button>
-
-                <div class="w-6 text-center font-medium select-none text-slate-900 dark:text-slate-100">{{ qtyInCart(p) || 0 }}</div>
-
-                <button
+                        [disabled]="qtyInCart(p) <= 0"
+                        (click)="decOne(p)"
+                      >−</button>
+                      <div class="w-6 text-center font-medium select-none text-slate-900 dark:text-slate-100">{{ qtyInCart(p) || 0 }}</div>
+                      <button
                   class="h-8 w-8 grid place-content-center rounded-lg border border-slate-200 dark:border-slate-800
                          hover:bg-slate-50 dark:hover:bg-slate-800/60
                          text-slate-900 dark:text-slate-100
                          transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  [disabled]="availableNow(p) <= 0"
-                  (click)="addOne(p)"
-                >+</button>
-              </div>
+                        [disabled]="availableNow(p) <= 0"
+                        (click)="addOne(p)"
+                      >+</button>
+                    </div>
+                  </div>
+                </div>
+              }
             </div>
-          </div>
+          }
         </div>
       </div>
-    </div>
 
-    <!-- Carrito (integrado) -->
-    <div class="space-y-3">
-      <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-soft sticky top-4">
-        <div class="flex items-center justify-between mb-4">
-          <div class="font-semibold text-lg text-slate-900 dark:text-slate-100">Carrito</div>
-          <div class="text-sm text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
-            {{ cart().length }} ítems
+      <!-- Carrito (integrado) -->
+      <div class="space-y-3">
+        <div class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-soft sticky top-4">
+          <div class="flex items-center justify-between mb-4">
+            <div class="font-semibold text-lg text-slate-900 dark:text-slate-100">Carrito</div>
+            <div class="text-sm text-slate-500 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
+              {{ cart().length }} ítems
+            </div>
           </div>
-        </div>
 
-        <div *ngIf="cartEmpty()" class="text-center py-8 text-slate-500 dark:text-slate-400">
-          <svg class="w-12 h-12 mx-auto text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-            </path>
-          </svg>
-          Tu carrito está vacío
-        </div>
+          @if (cartEmpty()) {
+            <div class="text-center py-8 text-slate-500 dark:text-slate-400">
+              <svg class="w-12 h-12 mx-auto text-slate-300 dark:text-slate-700 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                </path>
+              </svg>
+              Tu carrito está vacío
+            </div>
+          }
 
-        <div *ngIf="!cartEmpty()" class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
-          <div *ngFor="let it of cart()"
+          @if (!cartEmpty()) {
+            <div class="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+              @for (it of cart(); track it) {
+                <div
                class="border border-slate-200 dark:border-slate-800 rounded-xl p-3
                       bg-slate-50 dark:bg-slate-950/35">
-            <div class="flex justify-between items-start mb-2">
-              <div class="flex-1 min-w-0">
-                <div class="font-medium text-slate-800 dark:text-slate-100 truncate">{{ it.product.name }}</div>
-                <div class="text-xs text-slate-500 dark:text-slate-400 font-mono truncate">{{ it.product.sku }}</div>
-              </div>
-              <button class="text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-300 transition-colors" (click)="remove(it)">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </button>
-            </div>
-
-            <div class="text-xs mb-3"
-                 [class.text-emerald-700]="stockInSelectedStore(it.product) - it.quantity >= 0"
-                 [class.text-rose-600]="stockInSelectedStore(it.product) - it.quantity < 0"
-                 [class.dark:text-emerald-300]="stockInSelectedStore(it.product) - it.quantity >= 0"
-                 [class.dark:text-rose-300]="stockInSelectedStore(it.product) - it.quantity < 0">
-              <ng-container *ngIf="storeCtrl.value; else selSedeMsg">
-                Disponible: {{ stockInSelectedStore(it.product) }} • Quedan:
-                {{ stockInSelectedStore(it.product) - it.quantity | number:'1.0-0' }}
-              </ng-container>
-              <ng-template #selSedeMsg>
-                <span class="text-slate-500 dark:text-slate-400">Selecciona sede para validar existencias.</span>
-              </ng-template>
-            </div>
-
-            <div class="flex justify-between items-center">
-              <div class="inline-flex items-center gap-2">
+                  <div class="flex justify-between items-start mb-2">
+                    <div class="flex-1 min-w-0">
+                      <div class="font-medium text-slate-800 dark:text-slate-100 truncate">{{ it.product.name }}</div>
+                      <div class="text-xs text-slate-500 dark:text-slate-400 font-mono truncate">{{ it.product.sku }}</div>
+                    </div>
+                    <button class="text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-300 transition-colors" (click)="remove(it)">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="text-xs mb-3"
+                    [class.text-emerald-700]="stockInSelectedStore(it.product) - it.quantity >= 0"
+                    [class.text-rose-600]="stockInSelectedStore(it.product) - it.quantity < 0"
+                    [class.dark:text-emerald-300]="stockInSelectedStore(it.product) - it.quantity >= 0"
+                    [class.dark:text-rose-300]="stockInSelectedStore(it.product) - it.quantity < 0">
+                    @if (storeCtrl.value) {
+                      Disponible: {{ stockInSelectedStore(it.product) }} • Quedan:
+                      {{ stockInSelectedStore(it.product) - it.quantity | number:'1.0-0' }}
+                    } @else {
+                      <span class="text-slate-500 dark:text-slate-400">Selecciona sede para validar existencias.</span>
+                    }
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <div class="inline-flex items-center gap-2">
                 <button class="w-6 h-6 rounded-lg border border-slate-200 dark:border-slate-800
                                hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors
                                text-slate-900 dark:text-slate-100 flex items-center justify-center"
-                        (click)="inc(it, -1)">-</button>
-                <span class="w-8 inline-block text-center font-medium text-slate-900 dark:text-slate-100">{{ it.quantity }}</span>
+                      (click)="inc(it, -1)">-</button>
+                      <span class="w-8 inline-block text-center font-medium text-slate-900 dark:text-slate-100">{{ it.quantity }}</span>
                 <button class="w-6 h-6 rounded-lg border border-slate-200 dark:border-slate-800
                                hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors
                                text-slate-900 dark:text-slate-100 flex items-center justify-center"
-                        (click)="inc(it, +1)">+</button>
-              </div>
-
-              <div class="text-right">
-                <div class="text-sm font-medium text-slate-900 dark:text-slate-100">
-                  {{ (it.unitUSD * it.quantity) | number:'1.2-2' }} USD
+                      (click)="inc(it, +1)">+</button>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-medium text-slate-900 dark:text-slate-100">
+                        {{ (it.unitUSD * it.quantity) | number:'1.2-2' }} USD
+                      </div>
+                      <div class="text-xs text-slate-500 dark:text-slate-400">
+                        {{ it.unitUSD | number:'1.2-2' }} USD c/u
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="text-xs text-slate-500 dark:text-slate-400">
-                  {{ it.unitUSD | number:'1.2-2' }} USD c/u
-                </div>
-              </div>
+              }
             </div>
-          </div>
-        </div>
+          }
 
-        <div *ngIf="!cartEmpty()" class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
-          <div class="flex justify-between text-slate-600 dark:text-slate-300">
-            <span>Subtotal:</span>
-            <span class="font-semibold text-slate-800 dark:text-slate-100">{{ subtotalUSD() | number:'1.2-2' }} USD</span>
-          </div>
-
-          <div class="flex justify-between text-lg font-semibold pt-2 border-t border-slate-200 dark:border-slate-800">
-            <span class="text-slate-900 dark:text-slate-100">Total:</span>
-            <span class="text-2xl text-slate-900 dark:text-slate-100">{{ subtotalUSD() | number:'1.2-2' }} USD</span>
-          </div>
-
-          <button
+          @if (!cartEmpty()) {
+            <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
+              <div class="flex justify-between text-slate-600 dark:text-slate-300">
+                <span>Subtotal:</span>
+                <span class="font-semibold text-slate-800 dark:text-slate-100">{{ subtotalUSD() | number:'1.2-2' }} USD</span>
+              </div>
+              <div class="flex justify-between text-lg font-semibold pt-2 border-t border-slate-200 dark:border-slate-800">
+                <span class="text-slate-900 dark:text-slate-100">Total:</span>
+                <span class="text-2xl text-slate-900 dark:text-slate-100">{{ subtotalUSD() | number:'1.2-2' }} USD</span>
+              </div>
+              <button
             class="w-full rounded-xl bg-blue-600 text-white px-4 py-3 hover:bg-blue-700
                    dark:bg-blue-500 dark:hover:bg-blue-400
                    transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-            [disabled]="cartEmpty()"
-            (click)="openCheckout()"
-          >
-            Facturar
-          </button>
+                [disabled]="cartEmpty()"
+                (click)="openCheckout()"
+                >
+                Facturar
+              </button>
+            </div>
+          }
         </div>
       </div>
-    </div>
 
-  </div> <!-- /grid -->
+    </div> <!-- /grid -->
 
-<!-- ===================== MODAL CHECKOUT ===================== -->
-<div *ngIf="showCheckout()"
-     class="fixed inset-0 z-50 flex items-center justify-center p-4">
-
-  <!-- backdrop con blur -->
-  <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"
-       (click)="closeCheckout()"></div>
-
-  <!-- modal -->
-  <div class="relative w-full max-w-5xl bg-white dark:bg-slate-900/85 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-    <!-- header -->
-    <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-      <div class="font-semibold text-slate-800 dark:text-slate-100">Confirmar facturación</div>
-
+    <!-- ===================== MODAL CHECKOUT ===================== -->
+    @if (showCheckout()) {
+      <div
+        class="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <!-- backdrop con blur -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        (click)="closeCheckout()"></div>
+        <!-- modal -->
+        <div class="relative w-full max-w-5xl bg-white dark:bg-slate-900/85 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <!-- header -->
+          <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+            <div class="font-semibold text-slate-800 dark:text-slate-100">Confirmar facturación</div>
       <button class="w-9 h-9 grid place-content-center rounded-xl
                      hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
               (click)="closeCheckout()"
               [disabled]="checkingOut()"
               aria-label="Cerrar">
-        <svg class="w-5 h-5 text-slate-600 dark:text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-          <path d="M6 6l12 12M18 6L6 18"/>
-        </svg>
-      </button>
-    </div>
-
-    <!-- body -->
-    <div class="p-6 grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
-
-      <!-- LEFT -->
-      <div class="space-y-4">
-
-        <!-- items -->
-        <div class="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
-          <div class="px-4 py-2 bg-slate-50 dark:bg-slate-950/35 text-sm font-medium text-slate-700 dark:text-slate-200">
-            Productos a facturar ({{ cart().length }} ítems)
+              <svg class="w-5 h-5 text-slate-600 dark:text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                <path d="M6 6l12 12M18 6L6 18"/>
+              </svg>
+            </button>
           </div>
-
-          <div class="max-h-[280px] overflow-y-auto divide-y divide-slate-200 dark:divide-slate-800">
-            <div *ngFor="let it of cart()" class="px-4 py-3 flex items-start gap-3">
-              <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0 border border-slate-200 dark:border-slate-800">
-                <img [src]="imageUrl(it.product)"
-                     (error)="onImgError($event)"
-                     class="w-full h-full object-cover"
-                     alt="Producto" />
-              </div>
-
-              <div class="min-w-0 flex-1">
-                <div class="font-medium text-slate-800 dark:text-slate-100 truncate">{{ it.product.name }}</div>
-                <div class="text-xs text-slate-500 dark:text-slate-400 font-mono truncate">{{ it.product.sku }}</div>
-                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Cantidad: <span class="font-semibold text-slate-700 dark:text-slate-200">{{ it.quantity }}</span>
+          <!-- body -->
+          <div class="p-6 grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
+            <!-- LEFT -->
+            <div class="space-y-4">
+              <!-- items -->
+              <div class="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+                <div class="px-4 py-2 bg-slate-50 dark:bg-slate-950/35 text-sm font-medium text-slate-700 dark:text-slate-200">
+                  Productos a facturar ({{ cart().length }} ítems)
                 </div>
-              </div>
-
-              <div class="text-right shrink-0">
-                <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  <ng-container *ngIf="paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS'; else lineVES">
-                    {{ (it.unitUSD * it.quantity) | number:'1.2-2' }} USD
-                  </ng-container>
-                  <ng-template #lineVES>
-                    {{ (unitVES(it) * it.quantity) | number:'1.2-2' }} Bs
-                  </ng-template>
+                <div class="max-h-[280px] overflow-y-auto divide-y divide-slate-200 dark:divide-slate-800">
+                  @for (it of cart(); track it) {
+                    <div class="px-4 py-3 flex items-start gap-3">
+                      <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0 border border-slate-200 dark:border-slate-800">
+                        <img [src]="imageUrl(it.product)"
+                          (error)="onImgError($event)"
+                          class="w-full h-full object-cover"
+                          alt="Producto" />
+                        </div>
+                        <div class="min-w-0 flex-1">
+                          <div class="font-medium text-slate-800 dark:text-slate-100 truncate">{{ it.product.name }}</div>
+                          <div class="text-xs text-slate-500 dark:text-slate-400 font-mono truncate">{{ it.product.sku }}</div>
+                          <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            Cantidad: <span class="font-semibold text-slate-700 dark:text-slate-200">{{ it.quantity }}</span>
+                          </div>
+                        </div>
+                        <div class="text-right shrink-0">
+                          <div class="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                            @if (paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS') {
+                              {{ (it.unitUSD * it.quantity) | number:'1.2-2' }} USD
+                            } @else {
+                              {{ (unitVES(it) * it.quantity) | number:'1.2-2' }} Bs
+                            }
+                          </div>
+                          <div class="text-xs text-slate-500 dark:text-slate-400">
+                            @if (paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS') {
+                              {{ it.unitUSD | number:'1.2-2' }} USD c/u
+                            } @else {
+                              {{ unitVES(it) | number:'1.2-2' }} Bs c/u
+                            }
+                          </div>
+                        </div>
+                      </div>
+                    }
+                  </div>
                 </div>
-
-                <div class="text-xs text-slate-500 dark:text-slate-400">
-                  <ng-container *ngIf="paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS'; else unitLineVES">
-                    {{ it.unitUSD | number:'1.2-2' }} USD c/u
-                  </ng-container>
-                  <ng-template #unitLineVES>
-                    {{ unitVES(it) | number:'1.2-2' }} Bs c/u
-                  </ng-template>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- datos facturación -->
-        <div class="bg-white dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
-          <div class="text-sm font-medium text-slate-700 dark:text-slate-200 mb-3">Datos de facturación</div>
-
-          <div class="grid gap-3 md:grid-cols-2">
-            <div class="md:col-span-2">
-              <label class="text-xs text-slate-600 dark:text-slate-300">Nombre o Razón Social</label>
-              <input type="text"
-                     [formControl]="customerNameCtrl"
-                     placeholder="Ej: Andrea Shop C.A."
+                <!-- datos facturación -->
+                <div class="bg-white dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+                  <div class="text-sm font-medium text-slate-700 dark:text-slate-200 mb-3">Datos de facturación</div>
+                  <div class="grid gap-3 md:grid-cols-2">
+                    <div class="md:col-span-2">
+                      <label class="text-xs text-slate-600 dark:text-slate-300">Nombre o Razón Social</label>
+                      <input type="text"
+                        [formControl]="customerNameCtrl"
+                        placeholder="Ej: Andrea Shop C.A."
                      class="mt-1 w-full rounded-xl border border-slate-300 dark:border-slate-800
                             bg-white dark:bg-slate-950/40
                             text-slate-900 dark:text-slate-100
                             placeholder:text-slate-400 dark:placeholder:text-slate-500
                             px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-
-            <div class="md:col-span-2">
-              <label class="text-xs text-slate-600 dark:text-slate-300">Domicilio fiscal</label>
-              <input type="text"
-                     [formControl]="customerAddressCtrl"
-                     placeholder="Dirección del cliente"
+                      </div>
+                      <div class="md:col-span-2">
+                        <label class="text-xs text-slate-600 dark:text-slate-300">Domicilio fiscal</label>
+                        <input type="text"
+                          [formControl]="customerAddressCtrl"
+                          placeholder="Dirección del cliente"
                      class="mt-1 w-full rounded-xl border border-slate-300 dark:border-slate-800
                             bg-white dark:bg-slate-950/40
                             text-slate-900 dark:text-slate-100
                             placeholder:text-slate-400 dark:placeholder:text-slate-500
                             px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-
-            <div>
-              <label class="text-xs text-slate-600 dark:text-slate-300">Número de cédula</label>
-              <input type="text"
-                     [formControl]="customerIdDocCtrl"
-                     placeholder="V-12345678"
+                        </div>
+                        <div>
+                          <label class="text-xs text-slate-600 dark:text-slate-300">Número de cédula</label>
+                          <input type="text"
+                            [formControl]="customerIdDocCtrl"
+                            placeholder="V-12345678"
                      class="mt-1 w-full rounded-xl border border-slate-300 dark:border-slate-800
                             bg-white dark:bg-slate-950/40
                             text-slate-900 dark:text-slate-100
                             placeholder:text-slate-400 dark:placeholder:text-slate-500
                             px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-
-            <div>
-              <label class="text-xs text-slate-600 dark:text-slate-300">Teléfono</label>
-              <input type="text"
-                     [formControl]="customerPhoneCtrl"
-                     placeholder="0412-1234567"
+                          </div>
+                          <div>
+                            <label class="text-xs text-slate-600 dark:text-slate-300">Teléfono</label>
+                            <input type="text"
+                              [formControl]="customerPhoneCtrl"
+                              placeholder="0412-1234567"
                      class="mt-1 w-full rounded-xl border border-slate-300 dark:border-slate-800
                             bg-white dark:bg-slate-950/40
                             text-slate-900 dark:text-slate-100
                             placeholder:text-slate-400 dark:placeholder:text-slate-500
                             px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            </div>
-
-            <div class="md:col-span-2 text-xs text-slate-500 dark:text-slate-400">
-              * Si el pago es <span class="font-semibold text-slate-700 dark:text-slate-200">Pago móvil</span> o
-              <span class="font-semibold text-slate-700 dark:text-slate-200">Punto</span>, se factura con IVA (requiere Nombre y Cédula).
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- RIGHT -->
-      <div class="space-y-4">
-
-        <!-- forma de pago -->
-        <div class="bg-slate-50 dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
-          <div class="text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Forma de pago</div>
-
-          <div class="grid gap-2">
-            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700 dark:text-slate-200">
-              <input type="radio" [value]="'PAGO_MOVIL'" [formControl]="paymentMethodCtrl" class="text-blue-600 focus:ring-blue-500">
-              Pago móvil (Bs, con IVA)
-            </label>
-
-            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700 dark:text-slate-200">
-              <input type="radio" [value]="'PUNTO'" [formControl]="paymentMethodCtrl" class="text-blue-600 focus:ring-blue-500">
-              Punto (Bs, con IVA)
-            </label>
-
-            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700 dark:text-slate-200">
-              <input type="radio" [value]="'DIVISAS'" [formControl]="paymentMethodCtrl" class="text-blue-600 focus:ring-blue-500">
-              Divisas (USD, sin IVA)
-            </label>
-
-            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700 dark:text-slate-200">
-              <input type="radio" [value]="'USDT'" [formControl]="paymentMethodCtrl" class="text-blue-600 focus:ring-blue-500">
-              USDT (USD, sin IVA)
-            </label>
-          </div>
-
-          <div class="mt-3" *ngIf="paymentMethodCtrl.value === 'PAGO_MOVIL'">
-            <label class="text-xs text-slate-600 dark:text-slate-300">Referencia de Pago móvil *</label>
-            <input type="text"
-                   [formControl]="paymentRefCtrl"
-                   placeholder="Ej: 1234567890"
+                            </div>
+                            <div class="md:col-span-2 text-xs text-slate-500 dark:text-slate-400">
+                              * Si el pago es <span class="font-semibold text-slate-700 dark:text-slate-200">Pago móvil</span> o
+                              <span class="font-semibold text-slate-700 dark:text-slate-200">Punto</span>, se factura con IVA (requiere Nombre y Cédula).
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- RIGHT -->
+                      <div class="space-y-4">
+                        <!-- forma de pago -->
+                        <div class="bg-slate-50 dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+                          <div class="text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Forma de pago</div>
+                          <div class="grid gap-2">
+                            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700 dark:text-slate-200">
+                              <input type="radio" [value]="'PAGO_MOVIL'" [formControl]="paymentMethodCtrl" class="text-blue-600 focus:ring-blue-500">
+                              Pago móvil (Bs, con IVA)
+                            </label>
+                            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700 dark:text-slate-200">
+                              <input type="radio" [value]="'PUNTO'" [formControl]="paymentMethodCtrl" class="text-blue-600 focus:ring-blue-500">
+                              Punto (Bs, con IVA)
+                            </label>
+                            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700 dark:text-slate-200">
+                              <input type="radio" [value]="'DIVISAS'" [formControl]="paymentMethodCtrl" class="text-blue-600 focus:ring-blue-500">
+                              Divisas (USD, sin IVA)
+                            </label>
+                            <label class="inline-flex items-center gap-2 cursor-pointer text-sm text-slate-700 dark:text-slate-200">
+                              <input type="radio" [value]="'USDT'" [formControl]="paymentMethodCtrl" class="text-blue-600 focus:ring-blue-500">
+                              USDT (USD, sin IVA)
+                            </label>
+                          </div>
+                          @if (paymentMethodCtrl.value === 'PAGO_MOVIL') {
+                            <div class="mt-3">
+                              <label class="text-xs text-slate-600 dark:text-slate-300">Referencia de Pago móvil *</label>
+                              <input type="text"
+                                [formControl]="paymentRefCtrl"
+                                placeholder="Ej: 1234567890"
                    class="mt-1 w-full rounded-xl border border-slate-300 dark:border-slate-800
                           bg-white dark:bg-slate-950/40
                           text-slate-900 dark:text-slate-100
                           placeholder:text-slate-400 dark:placeholder:text-slate-500
                           px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
-            <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Se guardará en el sistema y saldrá en la factura.</div>
-          </div>
-
-          <div class="text-xs text-slate-500 dark:text-slate-400 mt-3"
-               *ngIf="paymentMethodCtrl.value === 'PAGO_MOVIL' || paymentMethodCtrl.value === 'PUNTO'">
-            Tasa vigente (referencia): 1 USD = {{ fx() | number:'1.2-4' }} Bs
-          </div>
-        </div>
-
-        <!-- totales -->
-        <div class="bg-white dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-xl p-4 space-y-2">
-          <div class="flex justify-between text-slate-600 dark:text-slate-300 text-sm">
-            <span>Total USD:</span>
-            <span class="font-semibold text-slate-800 dark:text-slate-100">{{ subtotalUSD() | number:'1.2-2' }}</span>
-          </div>
-          <div class="flex justify-between text-slate-600 dark:text-slate-300 text-sm">
-            <span>Total Bs:</span>
-            <span class="font-semibold text-slate-800 dark:text-slate-100">{{ subtotalVES() | number:'1.2-2' }}</span>
-          </div>
-
-          <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between items-end">
-            <div class="text-sm font-semibold text-slate-700 dark:text-slate-200">
-              TOTAL A PAGAR
-              <span class="text-xs font-normal text-slate-500 dark:text-slate-400">
-                ({{ (paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS') ? 'USD' : 'Bs' }})
-              </span>
-            </div>
-
-            <div class="text-2xl font-bold text-slate-900 dark:text-slate-100">
-              <ng-container *ngIf="paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS'; else totalBsTpl">
-                {{ subtotalUSD() | number:'1.2-2' }}
-              </ng-container>
-              <ng-template #totalBsTpl>
-                {{ subtotalVES() | number:'1.2-2' }}
-              </ng-template>
-            </div>
-          </div>
-
-          <div class="text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
-            * El IVA se desglosa en el backend solo para Pago móvil y Punto.
-          </div>
-        </div>
-
-        <!-- acciones -->
-        <div class="flex items-center justify-end gap-2">
+                                <div class="text-xs text-slate-500 dark:text-slate-400 mt-1">Se guardará en el sistema y saldrá en la factura.</div>
+                              </div>
+                            }
+                            @if (paymentMethodCtrl.value === 'PAGO_MOVIL' || paymentMethodCtrl.value === 'PUNTO') {
+                              <div class="text-xs text-slate-500 dark:text-slate-400 mt-3"
+                                >
+                                Tasa vigente (referencia): 1 USD = {{ fx() | number:'1.2-4' }} Bs
+                              </div>
+                            }
+                          </div>
+                          <!-- totales -->
+                          <div class="bg-white dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-xl p-4 space-y-2">
+                            <div class="flex justify-between text-slate-600 dark:text-slate-300 text-sm">
+                              <span>Total USD:</span>
+                              <span class="font-semibold text-slate-800 dark:text-slate-100">{{ subtotalUSD() | number:'1.2-2' }}</span>
+                            </div>
+                            <div class="flex justify-between text-slate-600 dark:text-slate-300 text-sm">
+                              <span>Total Bs:</span>
+                              <span class="font-semibold text-slate-800 dark:text-slate-100">{{ subtotalVES() | number:'1.2-2' }}</span>
+                            </div>
+                            <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-between items-end">
+                              <div class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                                TOTAL A PAGAR
+                                <span class="text-xs font-normal text-slate-500 dark:text-slate-400">
+                                  ({{ (paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS') ? 'USD' : 'Bs' }})
+                                </span>
+                              </div>
+                              <div class="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                                @if (paymentMethodCtrl.value === 'USDT' || paymentMethodCtrl.value === 'DIVISAS') {
+                                  {{ subtotalUSD() | number:'1.2-2' }}
+                                } @else {
+                                  {{ subtotalVES() | number:'1.2-2' }}
+                                }
+                              </div>
+                            </div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
+                              * El IVA se desglosa en el backend solo para Pago móvil y Punto.
+                            </div>
+                          </div>
+                          <!-- acciones -->
+                          <div class="flex items-center justify-end gap-2">
           <button class="px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-800
                          text-slate-700 dark:text-slate-200
                          hover:bg-slate-50 dark:hover:bg-slate-800/60 disabled:opacity-50"
-                  (click)="closeCheckout()"
-                  [disabled]="checkingOut()">
-            Cancelar
-          </button>
-
+                              (click)="closeCheckout()"
+                              [disabled]="checkingOut()">
+                              Cancelar
+                            </button>
           <button class="px-5 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700
                          dark:bg-blue-500 dark:hover:bg-blue-400
                          disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center gap-2"
-                  (click)="confirmCheckout()"
-                  [disabled]="checkingOut() || cartEmpty()">
-            <ng-container *ngIf="!checkingOut(); else busyTpl">
-              Facturar
-            </ng-container>
-            <ng-template #busyTpl>
-              <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Procesando…
-            </ng-template>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- bloqueo extra si está procesando -->
-    <div *ngIf="checkingOut()" class="absolute inset-0 bg-white/40 dark:bg-black/40"></div>
-  </div>
-</div>
-<!-- =================== /MODAL CHECKOUT ====================== -->
+                              (click)="confirmCheckout()"
+                              [disabled]="checkingOut() || cartEmpty()">
+                              @if (!checkingOut()) {
+                                Facturar
+                              } @else {
+                                <svg class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Procesando…
+                              }
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- bloqueo extra si está procesando -->
+                      @if (checkingOut()) {
+                        <div class="absolute inset-0 bg-white/40 dark:bg-black/40"></div>
+                      }
+                    </div>
+                  </div>
+                }
+                <!-- =================== /MODAL CHECKOUT ====================== -->

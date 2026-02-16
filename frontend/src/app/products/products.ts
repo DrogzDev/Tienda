@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InventoryApi } from '../core/inventory.service';
@@ -7,7 +7,7 @@ import { InventoryApi } from '../core/inventory.service';
 @Component({
   standalone: true,
   selector: 'app-products',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [FormsModule, RouterModule],
   templateUrl: './products.html',
 })
 export class ProductsComponent implements OnInit {

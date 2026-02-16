@@ -47,3 +47,27 @@ class SaleAdmin(admin.ModelAdmin):
     list_filter = ("store", "created_at")
     date_hierarchy = "created_at"
     inlines = [SaleItemInline]
+
+@admin.register(SaleItem)
+class SaleItemAdmin(admin.ModelAdmin):
+    list_display = ("id", "sale_id", "sale_created_at", "product", "quantity", "unit_price", "line_total")
+    list_select_related = ("sale", "product")
+    search_fields = ("product__name", "product__sku", "sale__id")
+    list_filter = ("sale__created_at", "sale__store")
+    date_hierarchy = "sale__created_at"
+
+    def sale_id(self, obj):
+        return obj.sale_id
+    sale_id.short_description = "Sale #"
+
+    def sale_created_at(self, obj):
+        return obj.sale.created_at
+    sale_created_at.short_description = "Fecha"
+
+    def line_total(self, obj):
+        # ajusta si tu SaleItem usa otros campos (price, unit_price, etc.)
+        try:
+            return obj.quantity * obj.unit_price
+        except Exception:
+            return "-"
+    line_total.short_description = "Total línea"

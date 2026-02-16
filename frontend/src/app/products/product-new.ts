@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { InventoryApi, Store, Category, ProductCreatePayload } from '../core/inventory.service';
@@ -7,7 +7,7 @@ import { InventoryApi, Store, Category, ProductCreatePayload } from '../core/inv
 @Component({
   selector: 'app-product-new',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './product-new.html'
 })
 export class ProductNewComponent {

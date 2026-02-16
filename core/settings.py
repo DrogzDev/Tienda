@@ -108,6 +108,7 @@ REST_FRAMEWORK = {
         "authapi.auth.CookieJWTAuthentication",
     ],
     "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissions",
         "rest_framework.permissions.IsAuthenticated",
     ],
     "DEFAULT_FILTER_BACKENDS": [
@@ -118,7 +119,7 @@ REST_FRAMEWORK = {
 
 # --- SimpleJWT (duraciones)
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
 

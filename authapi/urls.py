@@ -10,5 +10,5 @@ urlpatterns = [
     path("refresh/", views.refresh,     name="refresh"),
     path("logout/",  views.logout,      name="logout"),
     path("me/",      views.me,          name="me"),
-    path("whoami/",  views.whoami,      name="whoami"),  # DEBUG
+    path("whoami/",  views.whoami,      name="whoami"),
 ]

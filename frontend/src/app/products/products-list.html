@@ -23,12 +23,12 @@
           <div class="mb-6">
             <div class="relative">
               <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500"
-                   viewBox="0 0 24 24" fill="currentColor">
+                viewBox="0 0 24 24" fill="currentColor">
                 <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-5-5z"/>
               </svg>
 
               <input [formControl]="search"
-                     placeholder="Buscar por nombre o SKU…"
+                placeholder="Buscar por nombre o SKU…"
                      class="w-full pl-10 pr-4 py-3 rounded-xl
                             bg-slate-50 dark:bg-slate-950/40
                             border border-slate-200 dark:border-slate-800
@@ -49,9 +49,11 @@
                            px-4 py-3 text-sm
                            focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-500/20
                            outline-none transition-all"
-                    [formControl]="storeFilter">
+              [formControl]="storeFilter">
               <option [ngValue]="null">Todas las sedes</option>
-              <option *ngFor="let s of stores" [ngValue]="s.id">{{ s.name }} ({{ s.code }})</option>
+              @for (s of stores; track s) {
+                <option [ngValue]="s.id">{{ s.name }} ({{ s.code }})</option>
+              }
             </select>
           </div>
 
@@ -65,13 +67,13 @@
                            text-slate-700 dark:text-slate-200
                            hover:bg-slate-50 dark:hover:bg-slate-800/60
                            transition-all duration-200"
-                    [class.bg-blue-50]="statusFilter.value==='all'"
-                    [class.border-blue-300]="statusFilter.value==='all'"
-                    [class.text-blue-700]="statusFilter.value==='all'"
-                    [class.dark:bg-blue-500]="statusFilter.value==='all'"
-                    [class.dark:border-blue-500]="statusFilter.value==='all'"
-                    [class.dark:text-blue-300]="statusFilter.value==='all'"
-                    (click)="statusFilter.setValue('all')">
+              [class.bg-blue-50]="statusFilter.value==='all'"
+              [class.border-blue-300]="statusFilter.value==='all'"
+              [class.text-blue-700]="statusFilter.value==='all'"
+              [class.dark:bg-blue-500]="statusFilter.value==='all'"
+              [class.dark:border-blue-500]="statusFilter.value==='all'"
+              [class.dark:text-blue-300]="statusFilter.value==='all'"
+              (click)="statusFilter.setValue('all')">
               <svg class="w-5 h-5 text-inherit" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M3 6h18v2H3zM3 11h18v2H3zM3 16h18v2H3z"/>
               </svg>
@@ -84,13 +86,13 @@
                            text-slate-700 dark:text-slate-200
                            hover:bg-slate-50 dark:hover:bg-slate-800/60
                            transition-all duration-200"
-                    [class.bg-emerald-50]="statusFilter.value==='active'"
-                    [class.border-emerald-300]="statusFilter.value==='active'"
-                    [class.text-emerald-700]="statusFilter.value==='active'"
-                    [class.dark:bg-emerald-500]="statusFilter.value==='active'"
-                    [class.dark:border-emerald-500]="statusFilter.value==='active'"
-                    [class.dark:text-emerald-300]="statusFilter.value==='active'"
-                    (click)="statusFilter.setValue('active')">
+              [class.bg-emerald-50]="statusFilter.value==='active'"
+              [class.border-emerald-300]="statusFilter.value==='active'"
+              [class.text-emerald-700]="statusFilter.value==='active'"
+              [class.dark:bg-emerald-500]="statusFilter.value==='active'"
+              [class.dark:border-emerald-500]="statusFilter.value==='active'"
+              [class.dark:text-emerald-300]="statusFilter.value==='active'"
+              (click)="statusFilter.setValue('active')">
               <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
               <span class="font-medium">Solo activos</span>
             </button>
@@ -101,13 +103,13 @@
                            text-slate-700 dark:text-slate-200
                            hover:bg-slate-50 dark:hover:bg-slate-800/60
                            transition-all duration-200"
-                    [class.bg-slate-100]="statusFilter.value==='inactive'"
-                    [class.border-slate-300]="statusFilter.value==='inactive'"
-                    [class.text-slate-700]="statusFilter.value==='inactive'"
-                    [class.dark:bg-slate-800]="statusFilter.value==='inactive'"
-                    [class.dark:border-slate-700]="statusFilter.value==='inactive'"
-                    [class.dark:text-slate-200]="statusFilter.value==='inactive'"
-                    (click)="statusFilter.setValue('inactive')">
+              [class.bg-slate-100]="statusFilter.value==='inactive'"
+              [class.border-slate-300]="statusFilter.value==='inactive'"
+              [class.text-slate-700]="statusFilter.value==='inactive'"
+              [class.dark:bg-slate-800]="statusFilter.value==='inactive'"
+              [class.dark:border-slate-700]="statusFilter.value==='inactive'"
+              [class.dark:text-slate-200]="statusFilter.value==='inactive'"
+              (click)="statusFilter.setValue('inactive')">
               <span class="w-3 h-3 rounded-full bg-slate-400 inline-block"></span>
               <span class="font-medium">Solo inactivos</span>
             </button>
@@ -126,153 +128,159 @@
                              border-slate-200 dark:border-slate-800
                              text-slate-700 dark:text-slate-200
                              hover:bg-slate-100 dark:hover:bg-slate-800/60"
-                      [class.bg-blue-600]="selectedCats().size === 0"
-                      [class.text-white]="selectedCats().size === 0"
-                      [class.border-blue-600]="selectedCats().size === 0"
-                      [class.dark:bg-blue-500]="selectedCats().size === 0"
-                      [class.dark:border-blue-400]="selectedCats().size === 0"
-                      (click)="clearCats()">
+                [class.bg-blue-600]="selectedCats().size === 0"
+                [class.text-white]="selectedCats().size === 0"
+                [class.border-blue-600]="selectedCats().size === 0"
+                [class.dark:bg-blue-500]="selectedCats().size === 0"
+                [class.dark:border-blue-400]="selectedCats().size === 0"
+                (click)="clearCats()">
                 Todas las categorías
               </button>
 
-              <button *ngFor="let c of categories"
-                      type="button"
+              @for (c of categories; track c) {
+                <button
+                  type="button"
                       class="px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200
                              border-slate-200 dark:border-slate-800
                              text-slate-700 dark:text-slate-200
                              hover:border-blue-300 dark:hover:border-blue-500/60
                              hover:bg-slate-100 dark:hover:bg-slate-800/60"
-                      [class.bg-blue-600]="selectedCats().has(c.id)"
-                      [class.text-white]="selectedCats().has(c.id)"
-                      [class.border-blue-600]="selectedCats().has(c.id)"
-                      [class.dark:bg-blue-500]="selectedCats().has(c.id)"
-                      [class.dark:border-blue-400]="selectedCats().has(c.id)"
-                      (click)="toggleCat(c.id)">
-                {{ c.name }}
-              </button>
+                  [class.bg-blue-600]="selectedCats().has(c.id)"
+                  [class.text-white]="selectedCats().has(c.id)"
+                  [class.border-blue-600]="selectedCats().has(c.id)"
+                  [class.dark:bg-blue-500]="selectedCats().has(c.id)"
+                  [class.dark:border-blue-400]="selectedCats().has(c.id)"
+                  (click)="toggleCat(c.id)">
+                  {{ c.name }}
+                </button>
+              }
             </div>
           </div>
 
           <!-- Grid de tarjetas mejorado -->
           <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-            <div *ngFor="let p of pageItems()"
+            @for (p of pageItems(); track p) {
+              <div
                  class="bg-white dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden
                         shadow-soft hover:shadow-lg transition-all duration-300">
-
-              <!-- Imagen del producto -->
+                <!-- Imagen del producto -->
               <div class="relative aspect-[4/3] bg-gradient-to-br from-slate-50 to-slate-100
                           dark:from-slate-950/40 dark:to-slate-900/60 overflow-hidden">
-                <img [src]="imageUrl(p)"
-                     (error)="onImgError($event)"
-                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                     alt="Producto" />
-
-                <!-- Badge de estado -->
-                <div class="absolute top-3 right-3">
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold shadow-sm"
-                        [class.bg-emerald-100]="p.is_active"
-                        [class.text-emerald-700]="p.is_active"
-                        [class.bg-slate-100]="!p.is_active"
-                        [class.text-slate-600]="!p.is_active"
-                        [class.dark:bg-emerald-500]="p.is_active"
-                        [class.dark:text-emerald-200]="p.is_active"
-                        [class.dark:bg-slate-800]="!p.is_active"
-                        [class.dark:text-slate-300]="!p.is_active">
-                    {{ p.is_active ? 'Activo' : 'Inactivo' }}
-                  </span>
-                </div>
-              </div>
-
-              <!-- Información del producto -->
-              <div class="p-5 space-y-4">
-                <div class="flex items-start justify-between gap-3">
-                  <div class="min-w-0 flex-1">
-                    <div class="text-slate-800 dark:text-slate-100 font-semibold text-lg truncate">{{ p.name }}</div>
-                    <div class="text-xs text-slate-500 dark:text-slate-400 font-mono truncate mt-1">SKU: {{ p.sku }}</div>
+                  <img [src]="imageUrl(p)"
+                    (error)="onImgError($event)"
+                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    alt="Producto" />
+                  <!-- Badge de estado -->
+                  <div class="absolute top-3 right-3">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold shadow-sm"
+                      [class.bg-emerald-100]="p.is_active"
+                      [class.text-emerald-700]="p.is_active"
+                      [class.bg-slate-100]="!p.is_active"
+                      [class.text-slate-600]="!p.is_active"
+                      [class.dark:bg-emerald-500]="p.is_active"
+                      [class.dark:text-emerald-200]="p.is_active"
+                      [class.dark:bg-slate-800]="!p.is_active"
+                      [class.dark:text-slate-300]="!p.is_active">
+                      {{ p.is_active ? 'Activo' : 'Inactivo' }}
+                    </span>
                   </div>
                 </div>
-
-                <!-- Stock -->
-                <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-950/35 rounded-xl border border-transparent dark:border-slate-800">
-                  <div class="text-sm text-slate-600 dark:text-slate-300 font-medium">Stock disponible</div>
-                  <div class="text-xl font-bold text-slate-800 dark:text-slate-100">
-                    {{ stockInStore(p, storeFilter.value) }}
+                <!-- Información del producto -->
+                <div class="p-5 space-y-4">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0 flex-1">
+                      <div class="text-slate-800 dark:text-slate-100 font-semibold text-lg truncate">{{ p.name }}</div>
+                      <div class="text-xs text-slate-500 dark:text-slate-400 font-mono truncate mt-1">SKU: {{ p.sku }}</div>
+                    </div>
                   </div>
-                </div>
-
-                <!-- Categorías -->
-                <div class="flex flex-wrap gap-2">
-                  <span *ngFor="let cid of categoryIds(p); trackBy: trackId"
+                  <!-- Stock -->
+                  <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-950/35 rounded-xl border border-transparent dark:border-slate-800">
+                    <div class="text-sm text-slate-600 dark:text-slate-300 font-medium">Stock disponible</div>
+                    <div class="text-xl font-bold text-slate-800 dark:text-slate-100">
+                      {{ stockInStore(p, storeFilter.value) }}
+                    </div>
+                  </div>
+                  <!-- Categorías -->
+                  <div class="flex flex-wrap gap-2">
+                    @for (cid of categoryIds(p); track trackId($index, cid)) {
+                      <span
                         class="px-3 py-1.5 rounded-full text-xs border
                                border-slate-200 dark:border-slate-800
                                text-slate-600 dark:text-slate-300
                                bg-white dark:bg-slate-950/35">
-                    {{ categoryName[cid] || ('#' + cid) }}
-                  </span>
-                </div>
-
-                <!-- Acciones -->
-                <div class="pt-2 flex items-center justify-end gap-2">
-                  <a [routerLink]="['/products', p.id]"
+                        {{ categoryName[cid] || ('#' + cid) }}
+                      </span>
+                    }
+                  </div>
+                  <!-- Acciones -->
+                  <div class="pt-2 flex items-center justify-end gap-2">
+                    <a [routerLink]="['/products', p.id]"
                      class="px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200
                             hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium transition-colors">
-                    Editar
-                  </a>
-                  <button (click)="toggleStocks(p)"
+                      Editar
+                    </a>
+                    <button (click)="toggleStocks(p)"
                           class="px-3 py-2 rounded-lg text-slate-700 dark:text-slate-200
                                  hover:bg-slate-100 dark:hover:bg-slate-800/60 font-medium transition-colors">
-                    Stocks
-                  </button>
-                  <a [routerLink]="['/products/new']"
-                     [queryParams]="{ duplicate: p.id }"
+                      Stocks
+                    </button>
+                    <a [routerLink]="['/products/new']"
+                      [queryParams]="{ duplicate: p.id }"
                      class="px-3 py-2 rounded-lg text-blue-600 dark:text-blue-400
                             hover:bg-blue-50 dark:hover:bg-blue-500/10 font-medium transition-colors">
-                    Duplicar
-                  </a>
-                </div>
-
-                <!-- Panel de Stocks (expandible) -->
-                <div *ngIf="openRow[p.id]"
-                     class="bg-slate-50 dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-xl p-4 mt-4 animate-fadeIn">
-                  <div class="flex items-center justify-between mb-3">
-                    <h4 class="text-sm font-semibold text-slate-700 dark:text-slate-200">Stock por sede</h4>
-                    <button (click)="toggleStocks(p)"
-                            class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300">
-                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M18 6L6 18M6 6l12 12"/>
-                      </svg>
-                    </button>
+                      Duplicar
+                    </a>
                   </div>
-
-                  <div *ngIf="stocksLoading[p.id]" class="text-center py-4">
-                    <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 dark:border-blue-400"></div>
-                    <div class="text-sm text-slate-500 dark:text-slate-400 mt-2">Cargando stocks…</div>
-                  </div>
-
-                  <ng-container *ngIf="!stocksLoading[p.id]">
-                    <div *ngIf="!stocksMap[p.id]?.length" class="text-center py-4 text-slate-500 dark:text-slate-400">
-                      Sin registros de stock
-                    </div>
-
-                    <div *ngIf="stocksMap[p.id]?.length" class="space-y-3">
-                      <div *ngFor="let s of stocksMap[p.id]"
+                  <!-- Panel de Stocks (expandible) -->
+                  @if (openRow[p.id]) {
+                    <div
+                      class="bg-slate-50 dark:bg-slate-950/35 border border-slate-200 dark:border-slate-800 rounded-xl p-4 mt-4 animate-fadeIn">
+                      <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-sm font-semibold text-slate-700 dark:text-slate-200">Stock por sede</h4>
+                        <button (click)="toggleStocks(p)"
+                          class="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300">
+                          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                          </svg>
+                        </button>
+                      </div>
+                      @if (stocksLoading[p.id]) {
+                        <div class="text-center py-4">
+                          <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 dark:border-blue-400"></div>
+                          <div class="text-sm text-slate-500 dark:text-slate-400 mt-2">Cargando stocks…</div>
+                        </div>
+                      }
+                      @if (!stocksLoading[p.id]) {
+                        @if (!stocksMap[p.id]?.length) {
+                          <div class="text-center py-4 text-slate-500 dark:text-slate-400">
+                            Sin registros de stock
+                          </div>
+                        }
+                        @if (stocksMap[p.id]?.length) {
+                          <div class="space-y-3">
+                            @for (s of stocksMap[p.id]; track s) {
+                              <div
                            class="flex items-center justify-between p-3
                                   bg-white dark:bg-slate-900/70
                                   rounded-lg border border-slate-200 dark:border-slate-800">
-                        <div class="flex-1">
-                          <div class="font-medium text-slate-800 dark:text-slate-100">{{ s.store?.name || s.store_id }}</div>
-                          <div class="text-xs text-slate-500 dark:text-slate-400">Actualizado: {{ s.updated_at | date:'short' }}</div>
-                        </div>
-                        <div class="text-right">
-                          <div class="text-lg font-bold text-slate-800 dark:text-slate-100">{{ s.quantity }}</div>
-                          <div class="text-xs text-slate-500 dark:text-slate-400">Mín: {{ s.min_threshold }}</div>
-                        </div>
-                      </div>
+                                <div class="flex-1">
+                                  <div class="font-medium text-slate-800 dark:text-slate-100">{{ s.store?.name || s.store_id }}</div>
+                                  <div class="text-xs text-slate-500 dark:text-slate-400">Actualizado: {{ s.updated_at | date:'short' }}</div>
+                                </div>
+                                <div class="text-right">
+                                  <div class="text-lg font-bold text-slate-800 dark:text-slate-100">{{ s.quantity }}</div>
+                                  <div class="text-xs text-slate-500 dark:text-slate-400">Mín: {{ s.min_threshold }}</div>
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        }
+                      }
                     </div>
-                  </ng-container>
+                  }
                 </div>
               </div>
-            </div>
+            }
           </div>
 
           <!-- Paginación mejorada -->
@@ -284,7 +292,7 @@
 
             <div class="flex items-center gap-3">
               <button (click)="prevPage()"
-                      [disabled]="page <= 1"
+                [disabled]="page <= 1"
                       class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-800
                              text-slate-700 dark:text-slate-200 font-medium
                              disabled:opacity-50 disabled:cursor-not-allowed
@@ -304,7 +312,7 @@
               </div>
 
               <button (click)="nextPage()"
-                      [disabled]="page >= totalPages()"
+                [disabled]="page >= totalPages()"
                       class="px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-800
                              text-slate-700 dark:text-slate-200 font-medium
                              disabled:opacity-50 disabled:cursor-not-allowed
@@ -325,7 +333,7 @@
 
 <!-- Agregar animación CSS para el panel de stocks -->
 <style>
-@keyframes fadeIn {
+  @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }

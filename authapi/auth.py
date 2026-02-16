@@ -3,7 +3,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.exceptions import InvalidToken
 
 class CookieJWTAuthentication(JWTAuthentication):
 

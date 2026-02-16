@@ -1,5 +1,5 @@
 # authapi/serializers.py
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import get_user_model, authenticate, get_user_model
 from rest_framework import serializers
 
 User = get_user_model()
@@ -42,6 +42,25 @@ class MeSerializer(serializers.ModelSerializer):
     """
     Devuelve datos básicos del usuario autenticado (sin profile).
     """
+    groups = serializers.SerializerMethodField()
+    role = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ["id", "username", "email", "is_staff", "is_superuser", "last_login", "date_joined"]
+        fields = [
+            "id",
+            "username",
+            "email",
+            "is_staff",
+            "is_superuser",
+            "last_login",
+            "date_joined",
+            "groups",
+            "role",
+        ]
+
+    def get_groups(self, obj):
+        return list(obj.groups.values_list("name", flat=True))
+
+    def get_role(self, obj):
+        return obj.groups.values_list("name", flat=True).first()

@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InventoryApi, Product, Category, Store, StockRow } from '../core/inventory.service';
@@ -7,7 +7,7 @@ import { InventoryApi, Product, Category, Store, StockRow } from '../core/invent
 @Component({
   selector: 'app-product-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './product-detail.html'
 })
 export class ProductDetailComponent implements OnInit {

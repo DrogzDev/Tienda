@@ -4,78 +4,88 @@
             dark:text-slate-100
             dark:bg-gradient-to-b 
             dark:from-[#111828] 
-            dark:to-gray-600">
+            dark:to-gray-600
+            bg-gradient-to-b from-gray-200 to-white">
 
   <!-- ===================== SIDEBAR DESKTOP ===================== -->
   <aside
-    class="hidden md:flex shrink-0 text-gray-200 bg-gradient-to-b from-gray-900 via-gray-800 to-gray-700 shadow-xl overflow-hidden transition-[width] duration-300"
+    class="hidden md:flex shrink-0 text-gray-200 bg-gradient-to-b from-gray-200 via-gray-300 to-white shadow-xl overflow-hidden transition-[width] duration-300 dark:from-[#111828] dark:via-gray-800 dark:to-gray-600"
     [class.w-64]="!sidebarCollapsed()"
     [class.w-20]="sidebarCollapsed()"
-  >
+    >
     <div class="flex-1 flex flex-col">
       <!-- Header -->
-      <div class="h-16 flex items-center px-3 border-b border-gray-700/50 bg-gray-900/40">
+      <div class="h-16 flex items-center px-3 border-b border-gray-700/50 bg-gray-300/40 dark:bg-gray-900/40 dark:text-gray-200">
         <button
           type="button"
           (click)="toggleCollapse()"
-          class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-gray-700/50 transition"
+          class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-gray-700/50 transition dark:hover:bg-gray-600/50"
           [attr.title]="sidebarCollapsed() ? 'Expandir menú' : 'Contraer menú'"
           [attr.aria-label]="sidebarCollapsed() ? 'Expandir menú' : 'Contraer menú'"
-        >
-          <span class="w-9 h-9 grid place-content-center rounded-xl bg-gray-700/30">
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+          >
+          <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-gray-700 dark:text-gray-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
               <path d="M4 7h16M4 12h16M4 17h16"/>
             </svg>
           </span>
 
-          <span class="font-bold tracking-wide truncate text-white" *ngIf="!sidebarCollapsed()">
-            POS System
-          </span>
+          @if (!sidebarCollapsed()) {
+            <span class="font-bold tracking-wide truncate text-gray-800 dark:text-white">
+              SISTEMA DE VENTAS
+            </span>
+          }
         </button>
       </div>
 
       <!-- Nav -->
       <nav class="px-3 py-4 space-y-2 text-[15px]">
-        <a
-          *ngFor="let item of navItems"
-          [routerLink]="item.to"
-          routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="group relative flex items-center gap-3 rounded-xl px-3 py-3 border-r-2 border-transparent hover:bg-slate-700/50 transition"
-          [attr.title]="item.label"
-        >
-          <span class="w-5 shrink-0 text-slate-300 group-hover:text-white transition">
-            <ng-container [ngSwitch]="item.icon">
-              <!-- Home -->
-              <svg *ngSwitchCase="'home'" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
-              </svg>
-
-              <!-- Products -->
-              <svg *ngSwitchCase="'products'" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3 5h18v14H3V5zm2 2v10h14V7H5z"/>
-              </svg>
-
-              <!-- Add -->
-              <svg *ngSwitchCase="'add'" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-              </svg>
-
-              <!-- Sales -->
-              <svg *ngSwitchCase="'sales'" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
-              </svg>
-            </ng-container>
-          </span>
-
-          <span class="truncate font-medium" *ngIf="!sidebarCollapsed()">{{ item.label }}</span>
-
-          <!-- dot indicador cuando está colapsado -->
-          <span
-            *ngIf="sidebarCollapsed()"
-            class="absolute right-2 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 transition"
-          ></span>
-        </a>
+        @for (item of navItems; track item) {
+          <a
+            [routerLink]="item.to"
+            routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="group relative flex items-center gap-3 rounded-xl px-3 py-3 border-r-2 border-transparent hover:bg-slate-700/50 transition dark:hover:bg-gray-700/50 dark:text-gray-300"
+            [attr.title]="item.label"
+            >
+            <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center text-slate-700 group-hover:text-white transition dark:text-gray-400 dark:group-hover:text-gray-200">
+              @switch (item.icon) {
+                <!-- Home -->
+                @case ('home') {
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 9l9-4 9 4-9 4-9-4zm0 4l9 4 9-4v6l-9 4-9-4v-6z"/>
+                  </svg>
+                }
+                <!-- Products -->
+                @case ('products') {
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 5h18v14H3V5zm2 2v10h14V7H5z"/>
+                  </svg>
+                }
+                <!-- Add -->
+                @case ('add') {
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                  </svg>
+                }
+                <!-- Sales -->
+                @case ('sales') {
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                  </svg>
+                }
+              }
+            </span>
+            @if (!sidebarCollapsed()) {
+              <span class="truncate font-medium text-gray-800 dark:text-gray-300">{{ item.label }}</span>
+            }
+            <!-- dot indicador cuando está colapsado -->
+            @if (sidebarCollapsed()) {
+              <span
+                class="absolute right-2 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-blue-500 opacity-0 group-hover:opacity-100 transition"
+              ></span>
+            }
+          </a>
+        }
       </nav>
 
       <!-- Botón de Tema (Luna) - Arriba del footer -->
@@ -86,76 +96,97 @@
           class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 hover:bg-gradient-to-r hover:from-amber-500/20 hover:to-yellow-400/20 transition group"
           [attr.title]="sidebarCollapsed() ? 'Cambiar tema' : 'Cambiar tema'"
           [attr.aria-label]="sidebarCollapsed() ? 'Cambiar tema' : 'Cambiar tema'"
-        >
-          <span class="w-9 h-9 grid place-content-center rounded-xl bg-gray-700/30 group-hover:bg-gradient-to-br group-hover:from-amber-500/50 group-hover:to-yellow-400/50 transition">
-            <svg class="w-5 h-5 text-amber-200 group-hover:text-yellow-200 transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          >
+          <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+            <svg class="w-4 h-4 text-amber-600 dark:text-blue-400 group-hover:text-amber-700 dark:group-hover:text-blue-300 transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
           </span>
 
-          <span class="font-medium tracking-wide truncate text-gray-200" *ngIf="!sidebarCollapsed()">
-            Cambiar tema
-          </span>
+          @if (!sidebarCollapsed()) {
+            <span class="font-medium tracking-wide truncate text-gray-800 dark:text-gray-300">
+              Cambiar tema
+            </span>
+          }
         </button>
       </div>
 
       <!-- Footer -->
-      <div class="p-4 border-t border-gray-700/50 text-xs text-gray-400 text-center">
-        <span *ngIf="!sidebarCollapsed()">POS System v2.0</span>
-        <span *ngIf="sidebarCollapsed()">v2.0</span>
+      <div class="p-4 border-t border-gray-700/50 text-xs text-gray-600 text-center dark:text-gray-400 dark:border-gray-600/50">
+        @if (!sidebarCollapsed()) {
+          <span>Sistema de ventas v2.0</span>
+        }
+        @if (sidebarCollapsed()) {
+          <span>v2.0</span>
+        }
       </div>
     </div>
   </aside>
 
   <!-- ===================== SIDEBAR MOBILE ===================== -->
-  <div class="md:hidden fixed inset-0 z-40" *ngIf="sidebarOpen()">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="toggleSidebar()"></div>
-
-    <aside class="absolute inset-y-0 left-0 w-72 text-slate-200 bg-gradient-to-b from-slate-800 to-slate-900 shadow-2xl">
-      <div class="h-16 flex items-center px-4 border-b border-slate-700/50 justify-between bg-slate-800/40">
-        <div class="font-bold tracking-wide text-white">POS System</div>
-
-        <button
-          class="w-9 h-9 grid place-content-center rounded-xl hover:bg-slate-700/50 transition"
-          (click)="toggleSidebar()"
-          title="Cerrar menú"
-          aria-label="Cerrar menú"
-        >
-          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-            <path d="M6 6l12 12M18 6L6 18"/>
-          </svg>
-        </button>
-      </div>
-
-      <nav class="px-3 py-4 space-y-2 text-[15px]" (click)="toggleSidebar()">
-        <a
-          *ngFor="let item of navItems"
-          [routerLink]="item.to"
-          routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="flex items-center gap-3 rounded-xl px-3 py-3 border-r-2 border-transparent hover:bg-slate-700/50 transition"
-        >
-          <span class="w-5 shrink-0 text-slate-300">
-            <ng-container [ngSwitch]="item.icon">
-              <svg *ngSwitchCase="'home'" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-              <svg *ngSwitchCase="'products'" viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18v14H3V5zm2 2v10h14V7H5z"/></svg>
-              <svg *ngSwitchCase="'add'" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-              <svg *ngSwitchCase="'sales'" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-            </ng-container>
-          </span>
-          <span class="font-medium">{{ item.label }}</span>
-        </a>
-      </nav>
-
-      <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50 text-xs text-slate-400 text-center">
-        POS System v2.0
-      </div>
-    </aside>
-  </div>
+  @if (sidebarOpen()) {
+    <div class="md:hidden fixed inset-0 z-40">
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="toggleSidebar()"></div>
+      <aside class="absolute inset-y-0 left-0 w-72 text-slate-200 bg-gradient-to-b from-slate-800 to-slate-900 shadow-2xl">
+        <div class="h-16 flex items-center px-4 border-b border-slate-700/50 justify-between bg-slate-800/40">
+          <div class="font-bold tracking-wide text-white">POS System</div>
+          <button
+            class="flex-shrink-0 w-5 h-5 flex items-center justify-center hover:bg-slate-700/50 transition rounded-xl"
+            (click)="toggleSidebar()"
+            title="Cerrar menú"
+            aria-label="Cerrar menú"
+            >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <path d="M6 6l12 12M18 6L6 18"/>
+            </svg>
+          </button>
+        </div>
+        <nav class="px-3 py-4 space-y-2 text-[15px]" (click)="toggleSidebar()">
+          @for (item of navItems; track item) {
+            <a
+              [routerLink]="item.to"
+              routerLinkActive="bg-blue-600/20 text-white border-r-2 border-blue-500"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="flex items-center gap-3 rounded-xl px-3 py-3 border-r-2 border-transparent hover:bg-slate-700/50 transition text-gray-300"
+              >
+              <span class="flex-shrink-0 w-5 h-5 flex items-center justify-center text-slate-300">
+                @switch (item.icon) {
+                  @case ('home') {
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                  }
+                  @case ('products') {
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M3 5h18v14H3V5zm2 2v10h14V7H5z"/>
+                    </svg>
+                  }
+                  @case ('add') {
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                  }
+                  @case ('sales') {
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                  }
+                }
+              </span>
+              <span class="font-medium">{{ item.label }}</span>
+            </a>
+          }
+        </nav>
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-700/50 text-xs text-slate-400 text-center">
+          POS System v2.0
+        </div>
+      </aside>
+    </div>
+  }
 
   <!-- ===================== MAIN ===================== -->
   <section class="flex-1 min-w-0">
-    <main class="p-6">
+    <main class="p-6 text-slate-900 dark:text-slate-100">
       <router-outlet></router-outlet>
     </main>
   </section>

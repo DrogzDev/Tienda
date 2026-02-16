@@ -44,9 +44,8 @@ class Product(models.Model):
     name = models.CharField(max_length=160)
     description = models.TextField(blank=True)
     categories = models.ManyToManyField(Category, blank=True, related_name="products")
-    # 👇 PRECIO BASE EN USD (la UI lo edita; la venta lo “fotografía”)
     price_usd = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    is_active = models.BooleanField(default=True)  # se sincroniza con stock total
+    is_active = models.BooleanField(default=True) 
     image = models.ImageField(upload_to=product_image_upload_to, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
